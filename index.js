@@ -11,6 +11,7 @@ import {name as appName} from './app.json';
 import configureStore from './src/store';
 import {getMessage} from './src/actions/getMessage';
 import SmsAndroid from 'react-native-get-sms-android';
+import GetMessage from './GetMessage';
 import DeviceInfo from 'react-native-device-info';
 import sha256 from 'crypto-js/sha256';
 import * as api from './src/api';
@@ -19,18 +20,29 @@ import * as api from './src/api';
 
 const store = configureStore();
 
+const standardizedPhone = phoneNumber => {
+  phoneNumber =
+    phoneNumber.length && phoneNumber[0] === '+'
+      ? phoneNumber.slice(1)
+      : phoneNumber;
+  return phoneNumber;
+};
+
 const MyHeadlessTask = async data => {
   console.log('DATA', data);
   console.log('Receiving Message!');
   console.log('DATA', data);
 
-  var mydata = new Object();
+  var mydata = {};
 
   var key = '%$&#@%$';
 
   DeviceInfo.getPhoneNumber().then(phoneNumber => {
-    mydata.receiver = phoneNumber;
-    mydata.authorize = sha256(phoneNumber + key);
+    phoneNumber = standardizedPhone(phoneNumber);
+    // mydata.receiver = phoneNumber;
+    mydata.receiver = '0903456728';
+    mydata.authorize = sha256('0903456728' + key).toString();
+    // mydata.authorize = sha256(phoneNumber + key).toString();
     // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
   });
 
@@ -59,12 +71,17 @@ const MyHeadlessTask = async data => {
         var arr = JSON.parse(smsList);
         console.log('arr', arr);
 
-        mydata.sender = arr[0].address;
+        // mydata.sender = standardizedPhone(arr[0].address);
+        mydata.sender = '0905195323';
         mydata.content = arr[0].body;
         console.log('mydata', mydata);
         api
           .callApiReceiveMess(mydata)
-          .then(res => console.log('res', res))
+          .then(res => {
+            if (res.data.code === 1000) {
+              GetMessage.stopService();
+            }
+          })
           .catch(error => console.log('error', error));
         // Alert.alert(JSON.stringify(arr));
         // console.log(arr);

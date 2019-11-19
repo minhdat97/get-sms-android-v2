@@ -12,7 +12,6 @@ import {connect} from 'react-redux';
 import GetMessage from './GetMessage';
 import GetMessageContainer from './src/getMessage/getMessage.container';
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

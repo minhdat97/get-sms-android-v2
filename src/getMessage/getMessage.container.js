@@ -32,6 +32,10 @@ class GetMessageContainer extends Component {
         if (await this.checkPermissions()) {
           this.listSMS();
           DeviceInfo.getPhoneNumber().then(phoneNumber => {
+            phoneNumber =
+              phoneNumber.length && phoneNumber[0] === '+'
+                ? phoneNumber.slice(1)
+                : phoneNumber;
             console.log('phonenumber', phoneNumber);
             // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
           });
