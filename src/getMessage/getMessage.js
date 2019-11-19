@@ -25,7 +25,7 @@ class GetMessage extends Component {
             </View> */}
             <Text>
               Ngày: {currentDate.getHours()}h{currentDate.getMinutes()}p -{' '}
-              {currentDate.getDate()}/{currentDate.getMonth()}/
+              {currentDate.getDate()}/{currentDate.getMonth()+1}/
               {currentDate.getFullYear()}
             </Text>
           </View>

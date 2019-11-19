@@ -39,7 +39,7 @@ public class GetMessageService extends Service {
             // if (extra ==)
             context.startService(myIntent);
             HeadlessJsTaskService.acquireWakeLockNow(context);
-            handler.postDelayed(this, 2000);
+            //handler.postDelayed(this, 2000);
         }
     };
 

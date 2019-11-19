@@ -6,11 +6,12 @@
  * @flow
  */
 
-import React from 'react';
+import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import GetMessage from './GetMessage';
 import GetMessageContainer from './src/getMessage/getMessage.container';
+import BackgroundTimer from 'react-native-background-timer';
 
 const styles = StyleSheet.create({
   container: {
@@ -53,32 +54,87 @@ const styles = StyleSheet.create({
   },
 });
 
-const App = ({getMessage}) => {
-  console.log('getMessage', getMessage);
-  const message = getMessage.data ? 'Đã bật chạy ngầm' : 'Chạy ngầm';
-  return (
-    <View style={styles.container}>
-      <View style={styles.view2}>
-        <GetMessageContainer />
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      getMessage: false,
+    };
+    this.handleStartService = this.handleStartService.bind(this);
+    this.handleStopService = this.handleStopService.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.getMessage !== this.props.getMessage) {
+      this.setState({getMessage: nextProps.getMessage});
+    }
+  }
+
+  handleStartService() {
+    GetMessage.startService();
+  }
+
+  handleStopService() {
+    GetMessage.stopService();
+    BackgroundTimer.stopBackgroundTimer(); //after this call all code on background stop run.
+    this.setState({getMessage: false});
+  }
+
+  render() {
+    const {getMessage} = this.state;
+    const message = getMessage.data ? 'Đã bật chạy ngầm' : 'Chạy ngầm';
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.view2}>
+          <GetMessageContainer />
+        </View>
+        <View style={styles.view}>
+          <TouchableOpacity
+            style={styles.button}
+            // onPress={() => GetMessage.startService()}
+            onPress={this.handleStartService}>
+            <Text style={styles.instructions}>{message}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            // onPress={() => GetMessage.stopService()}
+            onPress={this.handleStopService}>
+            <Text style={styles.instructions}>Tắt chạy ngầm</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.view}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => GetMessage.startService()}>
-          <Text style={styles.instructions}>{message}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => GetMessage.stopService()}>
-          <Text style={styles.instructions}>Tắt</Text>
-        </TouchableOpacity>
-      </View>
-      {/* <View style={styles.view1}>
-        <Text style={styles.text}>{message}</Text>
-      </View> */}
-    </View>
-  );
-};
+    );
+  }
+}
+
+// const App = ({getMessage}) => {
+//   console.log('getMessage', getMessage);
+//   const message = getMessage.data ? 'Đã bật chạy ngầm' : 'Chạy ngầm';
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.view2}>
+//         <GetMessageContainer />
+//       </View>
+//       <View style={styles.view}>
+//         <TouchableOpacity
+//           style={styles.button}
+//           onPress={() => GetMessage.startService()}>
+//           <Text style={styles.instructions}>{message}</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity
+//           style={styles.button}
+//           onPress={() => GetMessage.stopService()}>
+//           <Text style={styles.instructions}>Tắt</Text>
+//         </TouchableOpacity>
+//       </View>
+//       {/* <View style={styles.view1}>
+//         <Text style={styles.text}>{message}</Text>
+//       </View> */}
+//     </View>
+//   );
+// };
 
 const mapStateToProps = store => ({
   getMessage: store.getMessageReducer,

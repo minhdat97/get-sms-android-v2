@@ -13,6 +13,7 @@ import {getMessage} from './src/actions/getMessage';
 import SmsAndroid from 'react-native-get-sms-android';
 import GetMessage from './GetMessage';
 import DeviceInfo from 'react-native-device-info';
+import BackgroundTimer from 'react-native-background-timer';
 import sha256 from 'crypto-js/sha256';
 import * as api from './src/api';
 
@@ -34,15 +35,18 @@ const MyHeadlessTask = async data => {
   console.log('DATA', data);
 
   var mydata = {};
+  var myphone = {};
 
   var key = '%$&#@%$';
 
   DeviceInfo.getPhoneNumber().then(phoneNumber => {
+    myphone.phone = standardizedPhone(phoneNumber);
     phoneNumber = standardizedPhone(phoneNumber);
-    // mydata.receiver = phoneNumber;
-    mydata.receiver = '0903456728';
-    mydata.authorize = sha256('0903456728' + key).toString();
-    // mydata.authorize = sha256(phoneNumber + key).toString();
+    mydata.receiver = phoneNumber;
+    // mydata.receiver = '0903456728';
+    // mydata.authorize = sha256('0903456728' + key).toString();
+    myphone.authorize = sha256(phoneNumber + key).toString();
+    mydata.authorize = sha256(phoneNumber + key).toString();
     // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
   });
 
@@ -71,15 +75,14 @@ const MyHeadlessTask = async data => {
         var arr = JSON.parse(smsList);
         console.log('arr', arr);
 
-        // mydata.sender = standardizedPhone(arr[0].address);
-        mydata.sender = '0905195323';
+        mydata.sender = standardizedPhone(arr[0].address);
+        // mydata.sender = '0905195323';
         mydata.content = arr[0].body;
         console.log('mydata', mydata);
         api
           .callApiReceiveMess(mydata)
           .then(res => {
             if (res.data.code === 1000) {
-              GetMessage.stopService();
             }
           })
           .catch(error => console.log('error', error));
@@ -92,12 +95,22 @@ const MyHeadlessTask = async data => {
     );
   }
 
+  BackgroundTimer.runBackgroundTimer(() => {
+    console.log('myphone', myphone);
+    api
+      .callApiCheckAlive(myphone)
+      .then(res => console.log(res))
+      .catch(error => console.log(error));
+  }, 5000);
+
   // if (data.action === 'new_message') {
   //   store.dispatch(setGetMessage(true));
   // }
   // setTimeout(() => {
   //   store.dispatch(setGetMessage(false));
   // }, 1000);
+
+  return Promise.resolve();
 };
 
 const RNRedux = () => (
