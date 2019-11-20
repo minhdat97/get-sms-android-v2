@@ -37,12 +37,15 @@ const MyHeadlessTask = async data => {
   console.log('DATA', data);
   console.log('Receiving Message!');
 
-  var mydata = {};
+  const mydata = {};
   mydata.sender = data.sender;
   mydata.content = data.content;
-  mydata.receiveTime = moment(data.time).format();
-  var myphone = {};
+  mydata.receiveTime = moment()
+    .utc(data.time)
+    .format();
+  mydata.receiver = '';
 
+  const myphone = {};
   var key = '%$&#@%$';
 
   DeviceInfo.getPhoneNumber().then(phoneNumber => {
@@ -64,6 +67,7 @@ const MyHeadlessTask = async data => {
   });
 
   console.log('mydata', mydata);
+  console.log('myphone', myphone);
 
   //   // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
   // });
