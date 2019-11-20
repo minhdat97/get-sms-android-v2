@@ -38,6 +38,9 @@ const MyHeadlessTask = async data => {
   console.log('Receiving Message!');
 
   var mydata = {};
+  mydata.sender = data.sender;
+  mydata.content = data.content;
+  mydata.receiveTime = moment(data.time).format();
   var myphone = {};
 
   var key = '%$&#@%$';
@@ -58,84 +61,88 @@ const MyHeadlessTask = async data => {
       // myphone.authorize = sha256(phoneNumber + key).toString();
       myphone.authorize = sha256(phoneNumber + key).toString();
     }
-
-    // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
   });
 
-  if (data.isReady === 'true') {
-    // const {minDate, maxDate} = this.state;
-    store.dispatch(getMessage(true));
-    // receiveSMS.dispatch();
-  }
+  console.log('mydata', mydata);
 
-  if (data.action === 'new_message') {
-    store.dispatch(getMessage(true));
+  //   // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
+  // });
 
-    console.log('here');
+  // if (data.isReady === 'true') {
+  //   // const {minDate, maxDate} = this.state;
+  //   // store.dispatch(getMessage(true));
+  //   // receiveSMS.dispatch();
+  //   console.log("here");
+  // }
 
-    var filter = {
-      box: 'inbox',
-      read: 0,
-      maxCount: 30,
-      // address: '+84788904744',
-    };
+  // if (data.action === 'new_message') {
+  //   // store.dispatch(getMessage(true));
 
-    await SmsAndroid.list(
-      JSON.stringify(filter),
-      fail => {
-        console.log('Failed with this error: ' + fail);
-      },
-      (count, smsList) => {
-        var arr = JSON.parse(smsList);
-        console.log('arr', arr);
-        console.log('receiver', mydata.receiver);
+  //   console.log('here');
 
-        mydata.sender = standardizedPhone(arr[0].address);
-        // mydata.sender = '0905195323';
-        mydata.content = arr[0].body;
-        console.log(
-          md5(
-            mydata.sender + mydata.receiver + mydata.content + key,
-          ).toString(),
-        );
+  //   var filter = {
+  //     box: 'inbox',
+  //     read: 0,
+  //     maxCount: 30,
+  //     // address: '+84788904744',
+  //   };
 
-        mydata.authorize = md5(
-          mydata.sender +
-            mydata.receiver +
-            mydata.content +
-            // moment(arr[0].date).format() +
-            key,
-        ).toString();
-        mydata.receiveTime = moment(arr[0].date).format();
+  //   await SmsAndroid.list(
+  //     JSON.stringify(filter),
+  //     fail => {
+  //       console.log('Failed with this error: ' + fail);
+  //     },
+  //     (count, smsList) => {
+  //       var arr = JSON.parse(smsList);
+  //       console.log('arr', arr);
+  //       console.log('receiver', mydata.receiver);
 
-        console.log('mydata', mydata);
-        api
-          .callApiReceiveMess(mydata)
-          .then(res => {
-            if (res.data.code === 1000) {
-              store.dispatch(receiveSMS({_id: arr[0]._id, status: true}));
-            }
-          })
-          .catch(error => {
-            console.log('error', error);
-            store.dispatch(receiveSMS({_id: arr[0]._id, status: false}));
-          });
-        // Alert.alert(JSON.stringify(arr));
-        // console.log(arr);
-        // this.setState({smsList: arr});
+  //       mydata.sender = standardizedPhone(arr[0].address);
+  //       // mydata.sender = '0905195323';
+  //       mydata.content = arr[0].body;
+  //       console.log(
+  //         md5(
+  //           mydata.sender + mydata.receiver + mydata.content + key,
+  //         ).toString(),
+  //       );
 
-        // this.intervalID = setTimeout(this.listSMS.bind(this), 0);
-      },
-    );
-  }
+  //       mydata.authorize = md5(
+  //         mydata.sender +
+  //           mydata.receiver +
+  //           mydata.content +
+  //           // moment(arr[0].date).format() +
+  //           key,
+  //       ).toString();
+  //       mydata.receiveTime = moment(arr[0].date).format();
 
-  BackgroundTimer.runBackgroundTimer(() => {
-    console.log('myphone', myphone);
-    api
-      .callApiCheckAlive(myphone)
-      .then(res => {})
-      .catch(error => {});
-  }, 5000);
+  //       console.log('mydata', mydata);
+  //       api
+  //         .callApiReceiveMess(mydata)
+  //         .then(res => {
+  //           if (res.data.code === 1000) {
+  //             store.dispatch(receiveSMS({_id: arr[0]._id, status: true}));
+  //           }
+  //         })
+  //         .catch(error => {
+  //           console.log('error', error);
+  //           store.dispatch(receiveSMS({_id: arr[0]._id, status: false}));
+  //         });
+  //       // Alert.alert(JSON.stringify(arr));
+  //       // console.log(arr);
+  //       // this.setState({smsList: arr});
+
+  //       // this.intervalID = setTimeout(this.listSMS.bind(this), 0);
+  //     },
+  //   );
+  // }
+
+  // BackgroundTimer.runBackgroundTimer(() => {
+  //   console.log('myphone', myphone);
+  //   api
+  //     .callApiCheckAlive(myphone)
+  //     .then(res => {})
+  //     .catch(error => {});
+  // }, 5000);
 
   // if (data.action === 'new_message') {
   //   store.dispatch(setGetMessage(true));

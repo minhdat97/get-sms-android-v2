@@ -21,8 +21,11 @@ public class GetMessageService extends Service {
 
     private static final int SERVICE_NOTIFICATION_ID = 12345;
     private static final String CHANNEL_ID = "GETMESSAGE";
-    private String name;
-    private String value;
+    private String nameIsReady, valueIsReady;
+    private String nameSender, valueSender;
+    private String nameContent, valueContent;
+    private String nameTime, valueTime;
+
 
 
     private Handler handler = new Handler();
@@ -32,10 +35,10 @@ public class GetMessageService extends Service {
             Context context = getApplicationContext();
             Log.d("service", "context: " + context);
             Intent myIntent = new Intent(context, GetMessageEventService.class);
-            myIntent.putExtra(getName(), getValue());
-            // myIntent.putExtra(getNameSender(), getValueSender());
-            // myIntent.putExtra(getNameContent(), getValueContent());
-            // myIntent.putExtra(getNameTime(), getValueTime());
+            myIntent.putExtra(getNameIsReady(), getValueIsReady());
+            myIntent.putExtra(getNameSender(), getValueSender());
+            myIntent.putExtra(getNameContent(), getValueContent());
+            myIntent.putExtra(getNameTime(), getValueTime());
 
             
 
@@ -61,106 +64,71 @@ public class GetMessageService extends Service {
     }
 
     public String getNameIsReady() {
-        return name;
+        return nameIsReady;
     }
 
     public void setNameIsReady(String globalVariable) {
-        this.name = globalVariable;
+        this.nameIsReady = globalVariable;
     }
 
     public String getValueIsReady() {
-        return value;
+        return valueIsReady;
     }
 
     public void setValueIsReady(String globalVariable) {
-        this.value = globalVariable;
-    }
-
-
-    // action
-    public String getNameAction() {
-        return name;
-    }
-
-    public void setNameAction(String globalVariable) {
-        this.name = globalVariable;
-    }
-
-    public String getValueAction() {
-        return value;
-    }
-
-    public void setValueAction(String globalVariable) {
-        this.value = globalVariable;
-    }
-
-    // get
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String globalVariable) {
-        this.name = globalVariable;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String globalVariable) {
-        this.value = globalVariable;
+        this.valueIsReady = globalVariable;
     }
 
     // sender
     public String getNameSender() {
-        return name;
+        return nameSender;
     }
 
     public void setNameSender(String globalVariable) {
-        this.name = globalVariable;
+        this.nameSender = globalVariable;
     }
 
     public String getValueSender() {
-        return value;
+        return valueSender;
     }
 
     public void setValueSender(String globalVariable) {
-        this.value = globalVariable;
+        this.valueSender = globalVariable;
     }
 
     //Content
     public String getNameContent() {
-        return name;
+        return nameContent;
     }
 
     public void setNameContent(String globalVariable) {
-        this.name = globalVariable;
+        this.nameContent = globalVariable;
     }
 
     public String getValueContent() {
-        return value;
+        return valueContent;
     }
 
     public void setValueContent(String globalVariable) {
-        this.value = globalVariable;
+        this.valueContent = globalVariable;
     }
 
 
     // Time
     public String getNameTime() {
-        return name;
+        return nameTime;
     }
 
     public void setNameTime(String globalVariable) {
-        this.name = globalVariable;
+        this.nameTime = globalVariable;
     }
 
     public String getValueTime() {
-        return value;
+        return valueTime;
     }
 
     public void setValueTime(String globalVariable) {
-        this.value = globalVariable;
+        this.valueTime = globalVariable;
     }
 
 
@@ -186,13 +154,13 @@ public class GetMessageService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
 
-        String action = extras.getString("action");
+        // String action = extras.getString("action");
         String isReady = extras.getString("isReady");
         String sender = extras.getString("sender");
         String content = extras.getString("content");
         String time = extras.getString("time");
 
-        if (sender != null && content != null && time != null) {
+        if (sender != null & content != null & time != null) {
             Log.d("onStartCommand", "info here");
             setNameSender("sender");
             setValueSender(sender);
@@ -204,23 +172,26 @@ public class GetMessageService extends Service {
             setValueTime(time);
 
         }
-
-        if (action != null) {
-            if(action.equals("new_message")) {
-                Log.d("onStartCommand", "isReady here");
-                setName("action");
-                setValue("new_message");
-            }
-        }
+        // if (action != null) {
+        //     if(action.equals("new_message")) {
+        //         Log.d("onStartCommand", "isReady here");
+        //         setName("action");
+        //         setValue("new_message");
+        //     }
+        // }
         if (isReady != null) {
             if(isReady.equals("true")) {
                 Log.d("onStartCommand", "isReady here");
-                setName("isReady");
-                setValue("true");
+                setNameIsReady("isReady");
+                setValueIsReady("true");
             }
         }
         Log.d("onStartCommand", "isReady: " + isReady);
-        Log.d("onStartCommand", "action: " + action);
+        Log.d("onStartCommand", "content: " + content);
+        Log.d("onStartCommand", "sender: " + sender);
+        Log.d("onStartCommand", "time: " + time);
+
+
 
         this.handler.post(this.runnableCode);
         createNotificationChannel();
