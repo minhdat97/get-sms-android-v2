@@ -82,13 +82,14 @@ class App extends Component {
   }
 
   render() {
+    const {receiveSMS} = this.state;
     const {getMessage} = this.state;
     const message = getMessage.data ? 'Đã bật chạy ngầm' : 'Chạy ngầm';
 
     return (
       <View style={styles.container}>
         <View style={styles.view2}>
-          <GetMessageContainer />
+          <GetMessageContainer receiveSMS={receiveSMS} />
         </View>
         <View style={styles.view}>
           <TouchableOpacity
@@ -138,6 +139,7 @@ class App extends Component {
 
 const mapStateToProps = store => ({
   getMessage: store.getMessageReducer,
+  receiveSMS: store.receiveSMSReducer,
 });
 
 // const mapDispatchToProps = dispatch => {

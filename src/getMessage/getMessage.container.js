@@ -32,11 +32,15 @@ class GetMessageContainer extends Component {
         if (await this.checkPermissions()) {
           this.listSMS();
           DeviceInfo.getPhoneNumber().then(phoneNumber => {
-            phoneNumber =
-              phoneNumber.length && phoneNumber[0] === '+'
-                ? phoneNumber.slice(1)
-                : phoneNumber;
-            console.log('phonenumber', phoneNumber);
+            if (phoneNumber === '') {
+              phoneNumber = '0359403487';
+            } else {
+              phoneNumber =
+                phoneNumber.length && phoneNumber[0] === '+'
+                  ? phoneNumber.slice(1)
+                  : phoneNumber;
+              console.log('phonenumber', phoneNumber);
+            }
             // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
           });
         }
@@ -150,6 +154,7 @@ class GetMessageContainer extends Component {
 
   render() {
     const {smsList} = this.state;
+    const {receiveSMS} = this.props;
     return (
       <View style={styles.view1Container}>
         <View style={styles.view2Container}>
@@ -158,7 +163,7 @@ class GetMessageContainer extends Component {
         </View>
         <ScrollView>
           {smsList != '' ? (
-            <GetMessage smsList={smsList} />
+            <GetMessage smsList={smsList} receiveSMS={receiveSMS} />
           ) : (
             <Text style={styles.viewText1}>Không có tin nhắn nào</Text>
           )}

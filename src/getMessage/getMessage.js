@@ -7,7 +7,7 @@ class GetMessage extends Component {
     super(props);
   }
   render() {
-    const {smsList} = this.props;
+    const {smsList, receiveSMS} = this.props;
     return smsList.map(sms => {
       const currentDate = new Date(sms.date);
       return (
