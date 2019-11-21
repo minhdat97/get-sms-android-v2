@@ -21,11 +21,11 @@ public class GetMessageService extends Service {
 
     private static final int SERVICE_NOTIFICATION_ID = 12345;
     private static final String CHANNEL_ID = "GETMESSAGE";
-    private String nameIsReady, valueIsReady;
-    private String nameSender, valueSender;
-    private String nameContent, valueContent;
-    private String nameTime, valueTime;
-
+    // private String nameIsReady, valueIsReady;
+    // private String nameSender, valueSender;
+    // private String nameContent, valueContent;
+    // private String nameTime, valueTime;
+    private String name, value;
 
 
     private Handler handler = new Handler();
@@ -35,19 +35,19 @@ public class GetMessageService extends Service {
             Context context = getApplicationContext();
             Log.d("service", "context: " + context);
             Intent myIntent = new Intent(context, GetMessageEventService.class);
-            myIntent.putExtra(getNameIsReady(), getValueIsReady());
-            myIntent.putExtra(getNameSender(), getValueSender());
-            myIntent.putExtra(getNameContent(), getValueContent());
-            myIntent.putExtra(getNameTime(), getValueTime());
+            // myIntent.putExtra(getNameIsReady(), getValueIsReady());
+            // myIntent.putExtra(getNameSender(), getValueSender());
+            // myIntent.putExtra(getNameContent(), getValueContent());
+            // myIntent.putExtra(getNameTime(), getValueTime());
 
-            
+            myIntent.putExtra(getName(), getValue());
 
             Log.d("myIntent", "intent: " + myIntent);
             Log.i("SMSBroadcastReceiver", "Intent recieved: " + myIntent.getAction());
             // if (extra ==)
             context.startService(myIntent);
             HeadlessJsTaskService.acquireWakeLockNow(context);
-            //handler.postDelayed(this, 2000);
+            // handler.postDelayed(this, 5000);
         }
     };
 
@@ -63,73 +63,92 @@ public class GetMessageService extends Service {
         }
     }
 
-    public String getNameIsReady() {
-        return nameIsReady;
+    // public String getNameIsReady() {
+    //     return nameIsReady;
+    // }
+
+    // public void setNameIsReady(String globalVariable) {
+    //     this.nameIsReady = globalVariable;
+    // }
+
+    // public String getValueIsReady() {
+    //     return valueIsReady;
+    // }
+
+    // public void setValueIsReady(String globalVariable) {
+    //     this.valueIsReady = globalVariable;
+    // }
+
+
+    //
+
+    public String getName() {
+        return name;
     }
 
-    public void setNameIsReady(String globalVariable) {
-        this.nameIsReady = globalVariable;
+    public void setName(String globalVariable) {
+        this.name = globalVariable;
     }
 
-    public String getValueIsReady() {
-        return valueIsReady;
+    public String getValue() {
+        return value;
     }
 
-    public void setValueIsReady(String globalVariable) {
-        this.valueIsReady = globalVariable;
+    public void setValue(String globalVariable) {
+        this.value = globalVariable;
     }
 
     // sender
-    public String getNameSender() {
-        return nameSender;
-    }
+    // public String getNameSender() {
+    //     return nameSender;
+    // }
 
-    public void setNameSender(String globalVariable) {
-        this.nameSender = globalVariable;
-    }
+    // public void setNameSender(String globalVariable) {
+    //     this.nameSender = globalVariable;
+    // }
 
-    public String getValueSender() {
-        return valueSender;
-    }
+    // public String getValueSender() {
+    //     return valueSender;
+    // }
 
-    public void setValueSender(String globalVariable) {
-        this.valueSender = globalVariable;
-    }
+    // public void setValueSender(String globalVariable) {
+    //     this.valueSender = globalVariable;
+    // }
 
-    //Content
-    public String getNameContent() {
-        return nameContent;
-    }
+    // //Content
+    // public String getNameContent() {
+    //     return nameContent;
+    // }
 
-    public void setNameContent(String globalVariable) {
-        this.nameContent = globalVariable;
-    }
+    // public void setNameContent(String globalVariable) {
+    //     this.nameContent = globalVariable;
+    // }
 
-    public String getValueContent() {
-        return valueContent;
-    }
+    // public String getValueContent() {
+    //     return valueContent;
+    // }
 
-    public void setValueContent(String globalVariable) {
-        this.valueContent = globalVariable;
-    }
+    // public void setValueContent(String globalVariable) {
+    //     this.valueContent = globalVariable;
+    // }
 
 
-    // Time
-    public String getNameTime() {
-        return nameTime;
-    }
+    // // Time
+    // public String getNameTime() {
+    //     return nameTime;
+    // }
 
-    public void setNameTime(String globalVariable) {
-        this.nameTime = globalVariable;
-    }
+    // public void setNameTime(String globalVariable) {
+    //     this.nameTime = globalVariable;
+    // }
 
-    public String getValueTime() {
-        return valueTime;
-    }
+    // public String getValueTime() {
+    //     return valueTime;
+    // }
 
-    public void setValueTime(String globalVariable) {
-        this.valueTime = globalVariable;
-    }
+    // public void setValueTime(String globalVariable) {
+    //     this.valueTime = globalVariable;
+    // }
 
 
     @Override
@@ -154,42 +173,42 @@ public class GetMessageService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
 
-        // String action = extras.getString("action");
+        String action = extras.getString("action");
         String isReady = extras.getString("isReady");
-        String sender = extras.getString("sender");
-        String content = extras.getString("content");
-        String time = extras.getString("time");
+        // String sender = extras.getString("sender");
+        // String content = extras.getString("content");
+        // String time = extras.getString("time");
 
-        if (sender != null & content != null & time != null) {
-            Log.d("onStartCommand", "info here");
-            setNameSender("sender");
-            setValueSender(sender);
+        // if (sender != null & content != null & time != null) {
+        //     Log.d("onStartCommand", "info here");
+        //     setNameSender("sender");
+        //     setValueSender(sender);
 
-            setNameContent("content");
-            setValueContent(content);
+        //     setNameContent("content");
+        //     setValueContent(content);
 
-            setNameTime("time");
-            setValueTime(time);
+        //     setNameTime("time");
+        //     setValueTime(time);
 
-        }
-        // if (action != null) {
-        //     if(action.equals("new_message")) {
-        //         Log.d("onStartCommand", "isReady here");
-        //         setName("action");
-        //         setValue("new_message");
-        //     }
         // }
+        if (action != null) {
+            if(action.equals("new_message")) {
+                Log.d("onStartCommand", "isReady here");
+                setName("action");
+                setValue("new_message");
+            }
+        }
         if (isReady != null) {
             if(isReady.equals("true")) {
                 Log.d("onStartCommand", "isReady here");
-                setNameIsReady("isReady");
-                setValueIsReady("true");
+                setName("isReady");
+                setValue("true");
             }
         }
-        Log.d("onStartCommand", "isReady: " + isReady);
-        Log.d("onStartCommand", "content: " + content);
-        Log.d("onStartCommand", "sender: " + sender);
-        Log.d("onStartCommand", "time: " + time);
+        // Log.d("onStartCommand", "isReady: " + isReady);
+        // Log.d("onStartCommand", "content: " + content);
+        // Log.d("onStartCommand", "sender: " + sender);
+        // Log.d("onStartCommand", "time: " + time);
 
 
 

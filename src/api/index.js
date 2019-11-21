@@ -42,6 +42,7 @@ const callApiGetMess = data => {
 };
 
 const callApiCheckAlive = data => {
+  console.log('data', data);
   return new Promise((resolve, reject) => {
     instance
       .post('/ActivitySMS', data)
@@ -49,9 +50,11 @@ const callApiCheckAlive = data => {
         console.log('response', response);
         response.data.code !== 1000 ? reject(response) : resolve(response);
       })
-      .catch(error => reject(error));
+      .catch(error => {
+        console.log('error api');
+        reject(error);
+      });
   });
 };
-
 
 export {callApiReceiveMess, callApiGetMess, callApiCheckAlive};
