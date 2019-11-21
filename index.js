@@ -15,7 +15,7 @@ import {receiveSMS} from './src/actions/receiveSMS';
 import SmsAndroid from 'react-native-get-sms-android';
 // import GetMessage from './GetMessage';
 import DeviceInfo from 'react-native-device-info';
-// import BackgroundTimer from 'react-native-background-timer';
+import BackgroundTimer from 'react-native-background-timer';
 import sha256 from 'crypto-js/sha256';
 import md5 from 'crypto-js/md5';
 import * as api from './src/api';
@@ -60,11 +60,11 @@ const phoneNumber = async () => {
 // }, 1000);
 
 function Timer(fn, t) {
-  var timerObj = setInterval(fn, t);
+  var timerObj = BackgroundTimer.setInterval(fn, t);
 
   this.stop = function() {
     if (timerObj) {
-      clearInterval(timerObj);
+      BackgroundTimer.clearInterval(timerObj);
       timerObj = null;
     }
     return this;
@@ -74,7 +74,7 @@ function Timer(fn, t) {
   this.start = function() {
     if (!timerObj) {
       this.stop();
-      timerObj = setInterval(fn, t);
+      timerObj = BackgroundTimer.setInterval(fn, t);
     }
     return this;
   };
@@ -142,7 +142,7 @@ const MyHeadlessTask = async data => {
     myphone.phone = standardizedPhone(phone);
     // myphone.authorize = sha256(phoneNumber + key).toString();
     console.log('phone hash', phone);
-    myphone.authorize = sha256(standardizedPhone(phone) + key + ' ').toString();
+    myphone.authorize = sha256(standardizedPhone(phone) + key).toString();
   }
   // console.log('mydata', phone);
   // console.log('myphone', myphone);

@@ -162,7 +162,7 @@ class GetMessageContainer extends Component {
           {/* <Button title="refresh list" onPress={this.listSMS} /> */}
         </View>
         <ScrollView>
-          {smsList != '' ? (
+          {smsList !== '' ? (
             <GetMessage smsList={smsList} receiveSMS={receiveSMS} />
           ) : (
             <Text style={styles.viewText1}>Không có tin nhắn nào</Text>
