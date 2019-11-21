@@ -38,27 +38,6 @@ const phoneNumber = async () => {
   return DeviceInfo.getPhoneNumber().then(_phoneNumber => _phoneNumber);
 };
 
-// const Delay = delay => {
-//   console.log('ping!');
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       return resolve(true);
-//     }, delay);
-//   });
-// };
-
-// setTimeout(() => {
-//   return (
-//       setTimeout(() => {
-//         this.setState(() => ({activateLightColorForRed: false}));
-//       }, 3000);
-//     ),
-// }, 3000);
-
-// const timer = setInterval(() => {
-//   console.log('ping!!!');
-// }, 1000);
-
 function Timer(fn, t) {
   var timerObj = BackgroundTimer.setInterval(fn, t);
 
@@ -99,30 +78,6 @@ const MyHeadlessTask = async data => {
 
   const myphone = {};
   const key = '%$&#@%$';
-
-  // DeviceInfo.getPhoneNumber()
-  //   .then(_phoneNumber => {
-  //     if (_phoneNumber === '') {
-  //       console.log('here');
-  //       myphone.phone = '0359403487';
-  //       mydata.receiver = '0359403487';
-  //       // mydata.authorize = sha256('0359403487' + key).toString();
-  //       // myphone.authorize = sha256('0359403487' + key).toString();
-  //       myphone.authorize = sha256('0359403487' + key).toString();
-  //       return {myphone, mydata};
-  //     } else {
-  //       mydata.receiver = standardizedPhone(_phoneNumber);
-  //       // mydata.receiver = '0903456728';
-  //       // mydata.authorize = sha256('0903456728' + key).toString();
-  //       myphone.phone = standardizedPhone(_phoneNumber);
-  //       // myphone.authorize = sha256(phoneNumber + key).toString();
-  //       myphone.authorize = sha256(_phoneNumber + key).toString();
-  //       return {myphone, mydata};
-  //     }
-  //   })
-  //   .then(res => {
-  //     mydata = res.mydata;
-  //   });
 
   const phone = await phoneNumber();
 
@@ -208,21 +163,9 @@ const MyHeadlessTask = async data => {
             console.log('error', error);
             store.dispatch(receiveSMS({_id: arr[0]._id, status: false}));
           });
-        // Alert.alert(JSON.stringify(arr));
-        // console.log(arr);
-        // this.setState({smsList: arr});
-
-        // this.intervalID = setTimeout(this.listSMS.bind(this), 0);
       },
     );
   }
-
-  // console.log('myphone', myphone);
-  // await api
-  //   .callApiCheckAlive(myphone)
-  //   .then(res => console.log(res))
-  //   .catch(error => console.log(error));
-
   // BackgroundTimer.runBackgroundTimer(() => {
   //   // console.log('myphone', myphone);
   //   api
@@ -233,23 +176,6 @@ const MyHeadlessTask = async data => {
   //     })
   //     .then(res => console.log(res))
   //     .catch(error => console.log(error));
-  // }, 5000);
-
-  // setInterval(() => {
-  //   console.log('ping!!!');
-  //   api
-  //     .callApiCheckAlive({
-  //       phone: '0902468121',
-  //       authorize:
-  //         '047e4607ad40140718149718a92149c0531f2924ac38a632a9b984fd1a0b699d',
-  //     })
-  //     .then(res => {
-  //       counter++;
-  //       if (counter === 5) {
-  //         console.log('res', res);
-  //       }
-  //     })
-  //     .catch(error => console.log('error', error));
   // }, 5000);
 
   var timer = new Timer(async function() {
@@ -271,29 +197,6 @@ const MyHeadlessTask = async data => {
         counter = 0;
       });
   }, 2000);
-  // BackgroundTimer.stopBackgroundTimer(); //after this call all code on background stop run.
-
-  // await Delay(5000);
-
-  // setTimeout(() => {
-  //   console.log('ping!');
-  //   console.log('myphone', myphone);
-  //   api
-  //     .callApiCheckAlive({
-  //       phone: '0902468121',
-  //       authorize:
-  //         '047e4607ad40140718149718a92149c0531f2924ac38a632a9b984fd1a0b699d',
-  //     })
-  //     .then(res => {})
-  //     .catch(error => {});
-  // }, 5000);
-
-  // if (data.action === 'new_message') {
-  //   store.dispatch(setGetMessage(true));
-  // }
-  // setTimeout(() => {
-  //   store.dispatch(setGetMessage(false));
-  // }, 1000);
 
   return Promise.resolve();
 };
