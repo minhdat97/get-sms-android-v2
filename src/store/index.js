@@ -22,7 +22,6 @@ export default function configureStore(initialState) {
     //   // ChangePasswordRedirect
     // ),
     applyMiddleware(sagaMiddleware),
-
   );
 
   store.runSaga = sagaMiddleware.run(rootSagas);
