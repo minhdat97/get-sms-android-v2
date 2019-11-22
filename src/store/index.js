@@ -9,7 +9,7 @@ import rootSagas from '../sagas';
 export default function configureStore(initialState) {
   const sagaMiddleware = createSagaMiddleware();
 
-//   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+  //  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 
   const store = createStore(
     reducer,

@@ -21,13 +21,9 @@ public class GetMessageReceiver extends BroadcastReceiver {
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "Intent recieved: " + intent.getAction());
         Intent messIntent = new Intent(context, GetMessageService.class);
-        Log.i(TAG, "Intent recieved: " + intent.getAction());
-        Log.d(intent.getAction(), "intent");
         if (intent.getAction().equals(SMS_RECEIVED))
         {
-            Log.d(TAG, "here");
             messIntent.putExtra("action", "new_message");
         }
        else

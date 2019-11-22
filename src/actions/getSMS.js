@@ -1,5 +1,4 @@
 const getSMS = payload => {
-  console.log('credential', payload);
   return {
     type: 'RECEIVE_DATA',
     payload,

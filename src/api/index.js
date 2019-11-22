@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://sbx-api.payme.vn',
+  baseURL: 'https://api.payme.vn',
 });
 
 // instance.interceptors.request.use(
@@ -22,7 +22,6 @@ const callApiReceiveMess = data => {
     instance
       .post('/ReceiveSMS', data)
       .then(response => {
-        console.log('response', response);
         response.data.code !== 1000 ? reject(response) : resolve(response);
       })
       .catch(error => reject(error));
@@ -34,7 +33,6 @@ const callApiGetMess = data => {
     instance
       .post('/GetSMS', data)
       .then(response => {
-        console.log('response', response);
         response.data.code !== 1000 ? reject(response) : resolve(response);
       })
       .catch(error => reject(error));
@@ -47,11 +45,9 @@ const callApiCheckAlive = data => {
     instance
       .post('/ActivitySMS', data)
       .then(response => {
-        console.log('response', response);
         response.data.code !== 1000 ? reject(response) : resolve(response);
       })
       .catch(error => {
-        console.log('error api');
         reject(error);
       });
   });

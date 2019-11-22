@@ -1,5 +1,4 @@
 const getMessage = payload => {
-  console.log('credential', payload);
   return {
     type: 'GET_MESSAGE',
     payload,

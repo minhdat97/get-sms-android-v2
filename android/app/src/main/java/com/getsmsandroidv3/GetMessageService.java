@@ -33,7 +33,6 @@ public class GetMessageService extends Service {
         @Override
         public void run() {
             Context context = getApplicationContext();
-            Log.d("service", "context: " + context);
             Intent myIntent = new Intent(context, GetMessageEventService.class);
             // myIntent.putExtra(getNameIsReady(), getValueIsReady());
             // myIntent.putExtra(getNameSender(), getValueSender());
@@ -42,8 +41,6 @@ public class GetMessageService extends Service {
 
             myIntent.putExtra(getName(), getValue());
 
-            Log.d("myIntent", "intent: " + myIntent);
-            Log.i("SMSBroadcastReceiver", "Intent recieved: " + myIntent.getAction());
             // if (extra ==)
             context.startService(myIntent);
             HeadlessJsTaskService.acquireWakeLockNow(context);
@@ -164,7 +161,6 @@ public class GetMessageService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d("Destroy", "here");
         super.onDestroy();
         this.handler.removeCallbacks(this.runnableCode);
     }
@@ -193,14 +189,12 @@ public class GetMessageService extends Service {
         // }
         if (action != null) {
             if(action.equals("new_message")) {
-                Log.d("onStartCommand", "isReady here");
                 setName("action");
                 setValue("new_message");
             }
         }
         if (isReady != null) {
             if(isReady.equals("true")) {
-                Log.d("onStartCommand", "isReady here");
                 setName("isReady");
                 setValue("true");
             }

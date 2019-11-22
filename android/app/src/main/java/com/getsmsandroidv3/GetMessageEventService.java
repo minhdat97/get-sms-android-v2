@@ -18,9 +18,7 @@ public class GetMessageEventService extends HeadlessJsTaskService {
     @Nullable
     protected HeadlessJsTaskConfig getTaskConfig(Intent intent) {
         Bundle extras = intent.getExtras();
-        Log.d("getTaskConfig", "extras " + extras);
         WritableMap data = extras != null ? Arguments.fromBundle(extras) : null;
-        Log.d("getTaskConfig", "data " + data);
         return new HeadlessJsTaskConfig(
                 TASK_NAME,
                 data,

@@ -66,9 +66,6 @@ function Timer(fn, t) {
 }
 
 const MyHeadlessTask = async data => {
-  console.log('DATA', data);
-  console.log('Receiving Message!');
-
   var mydata = {};
   mydata.sender = data.sender;
   mydata.content = data.content;
@@ -81,10 +78,7 @@ const MyHeadlessTask = async data => {
 
   const phone = await phoneNumber();
 
-  console.log('Phone', phone);
-
   if (phone === '') {
-    console.log('here');
     myphone.phone = '0359403487';
     mydata.receiver = '0359403487';
     // mydata.authorize = sha256('0359403487' + key).toString();
@@ -96,7 +90,6 @@ const MyHeadlessTask = async data => {
     // mydata.authorize = sha256('0903456728' + key).toString();
     myphone.phone = standardizedPhone(phone);
     // myphone.authorize = sha256(phoneNumber + key).toString();
-    console.log('phone hash', phone);
     myphone.authorize = sha256(standardizedPhone(phone) + key).toString();
   }
   // console.log('mydata', phone);
@@ -108,13 +101,10 @@ const MyHeadlessTask = async data => {
     // const {minDate, maxDate} = this.state;
     store.dispatch(getMessage(true));
     // receiveSMS.dispatch();
-    console.log('here');
   }
 
   if (data.action === 'new_message') {
     store.dispatch(getMessage(true));
-
-    console.log('here');
 
     var filter = {
       box: 'inbox',
@@ -130,17 +120,10 @@ const MyHeadlessTask = async data => {
       },
       (count, smsList) => {
         var arr = JSON.parse(smsList);
-        console.log('arr', arr);
-        console.log('receiver', mydata.receiver);
 
         mydata.sender = standardizedPhone(arr[0].address);
         // mydata.sender = '0905195323';
         mydata.content = arr[0].body;
-        console.log(
-          md5(
-            mydata.sender + mydata.receiver + mydata.content + key,
-          ).toString(),
-        );
 
         mydata.authorize = md5(
           mydata.sender +
@@ -151,7 +134,7 @@ const MyHeadlessTask = async data => {
         ).toString();
         mydata.receiveTime = moment(arr[0].date).format();
 
-        console.log('mydata', mydata);
+        // console.log('mydata', mydata);
         api
           .callApiReceiveMess(mydata)
           .then(res => {
@@ -160,7 +143,7 @@ const MyHeadlessTask = async data => {
             }
           })
           .catch(error => {
-            console.log('error', error);
+            // console.log('error', error);
             store.dispatch(receiveSMS({_id: arr[0]._id, status: false}));
           });
       },
@@ -179,24 +162,24 @@ const MyHeadlessTask = async data => {
   // }, 5000);
 
   var timer = new Timer(async function() {
-    console.log('myphone', myphone);
+    // console.log('myphone', myphone);
     // your function here
-    console.log('ping!!!');
+    // console.log('ping!!!');
     await api
       .callApiCheckAlive(myphone)
       .then(res => {
-        console.log('counter', counter);
+        // console.log('counter', counter);
         if (counter === 5) {
-          timer.reset(4000);
+          timer.reset(300000);
         }
         counter++;
       })
       .catch(error => {
-        console.log('error', error);
-        timer.reset(2000);
+        // console.log('error', error);
+        timer.reset(60000);
         counter = 0;
       });
-  }, 2000);
+  }, 60000);
 
   return Promise.resolve();
 };

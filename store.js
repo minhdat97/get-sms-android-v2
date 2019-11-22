@@ -11,7 +11,6 @@ const RECEIVE_DATA = 'RECEIVE_DATA';
 export const setGetMessage = createAction(SET_GET_MESSAGE);
 export const receiveData = createAction(RECEIVE_DATA);
 
-
 const App = handleActions(
   {
     [SET_GET_MESSAGE]: (state, {payload}) => ({
