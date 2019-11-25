@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://api.payme.vn',
+  baseURL: 'https://sbx-api.payme.vn',
+  // baseURL: 'https://news.ycombinator.com',
 });
 
 // instance.interceptors.request.use(
@@ -22,9 +23,13 @@ const callApiReceiveMess = data => {
     instance
       .post('/ReceiveSMS', data)
       .then(response => {
+        console.log('here1');
         response.data.code !== 1000 ? reject(response) : resolve(response);
       })
-      .catch(error => reject(error));
+      .catch(error => {
+        console.log('error', error);
+        reject(error);
+      });
   });
 };
 
@@ -33,21 +38,25 @@ const callApiGetMess = data => {
     instance
       .post('/GetSMS', data)
       .then(response => {
-        response.data.code !== 1000 ? reject(response) : resolve(response);
+        // response.data.code !== 1000 ? reject(response) : resolve(response);
+
+        response.status.code !== 1000 ? reject(response) : resolve(response);
       })
       .catch(error => reject(error));
   });
 };
 
 const callApiCheckAlive = data => {
-  console.log('data', data);
   return new Promise((resolve, reject) => {
     instance
       .post('/ActivitySMS', data)
       .then(response => {
+        console.log(response);
+        // response.data.code !== 1000 ? reject(response) : resolve(response);
         response.data.code !== 1000 ? reject(response) : resolve(response);
       })
       .catch(error => {
+        console.log('error', error);
         reject(error);
       });
   });

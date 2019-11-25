@@ -7,27 +7,41 @@ class GetMessage extends Component {
     super(props);
   }
   render() {
-    const {smsList, receiveSMS} = this.props;
-    return smsList.map(sms => {
-      const currentDate = new Date(sms.date);
+    const {receiveSMS} = this.props;
+    // const data = JSON.parse(receiveSMS.payload[0].data);
+    console.log('receiveSMS', receiveSMS);
+    return receiveSMS.slice(0, 30).map(sms => {
+      const currentDate = new Date(sms.data.receiveTime);
       return (
-        <View style={styles.view1Style} key={sms._id}>
+        <View style={styles.view1Style} key={sms.id}>
           <View style={styles.viewText}>
-            <Text>SĐT: {sms.address}</Text>
-            <Text>Nội dung: {sms.body}</Text>
+            <Text>STT: {sms.id}</Text>
+            <Text>SĐT: {sms.data.sender}</Text>
+            <Text>Nội dung: {sms.data.content}</Text>
             {/* <Text>Id: {sms._id}</Text> */}
             {/* <View style={styles.view2Style}>
-              <Text>Date timestamp: {sms.date}</Text>
-              <Button
-              title="copy date"
-              onPress={() => Clipboard.setString(sms.date.toString())}
-            />
-            </View> */}
+                <Text>Date timestamp: {sms.date}</Text>
+                <Button
+                title="copy date"
+                onPress={() => Clipboard.setString(sms.date.toString())}
+              />
+              </View> */}
             <Text>
-              Ngày: {currentDate.getHours()}h{currentDate.getMinutes()}p -{' '}
-              {currentDate.getDate()}/{currentDate.getMonth()+1}/
-              {currentDate.getFullYear()}
+              Ngày: {currentDate.getUTCHours()}h{currentDate.getUTCMinutes()}p -{' '}
+              {currentDate.getUTCDate()}/{currentDate.getUTCMonth() + 1}/
+              {currentDate.getUTCFullYear()}
             </Text>
+
+            {/* <Text>Ngày: {sms.data.receiveTime}</Text> */}
+            {sms.status !== null ? (
+              sms.status ? (
+                <Text>Trạng thái: SUCCESS</Text>
+              ) : (
+                <Text>Trạng thái: FAILED</Text>
+              )
+            ) : (
+              <Text>Trạng thái: N/A</Text>
+            )}
           </View>
         </View>
       );

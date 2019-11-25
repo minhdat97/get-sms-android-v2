@@ -29,7 +29,7 @@ class GetMessageContainer extends Component {
         }
 
         if (await this.checkPermissions()) {
-          this.listSMS();
+          // this.listSMS();
           // DeviceInfo.getPhoneNumber().then(phoneNumber => {
           //   if (phoneNumber === '') {
           //     phoneNumber = '0359403487';
@@ -121,39 +121,40 @@ class GetMessageContainer extends Component {
     }
   }
 
-  listSMS = () => {
-    const {minDate, maxDate} = this.state;
-    var filter = {
-      box: 'inbox',
-      read: 0,
-      maxCount: 30,
-      // address: '+84788904744',
-    };
-    if (minDate !== '') {
-      filter.minDate = minDate;
-    }
-    if (maxDate !== '') {
-      filter.maxDate = maxDate;
-    }
+  // listSMS = () => {
+  //   const {minDate, maxDate} = this.state;
+  //   var filter = {
+  //     box: 'inbox',
+  //     read: 0,
+  //     maxCount: 30,
+  //     // address: '+84788904744',
+  //   };
+  //   if (minDate !== '') {
+  //     filter.minDate = minDate;
+  //   }
+  //   if (maxDate !== '') {
+  //     filter.maxDate = maxDate;
+  //   }
 
-    SmsAndroid.list(
-      JSON.stringify(filter),
-      fail => {
-        console.log('Failed with this error: ' + fail);
-      },
-      (count, smsList) => {
-        var arr = JSON.parse(smsList);
-        // Alert.alert(JSON.stringify(arr));
-        // console.log(arr);
-        this.setState({smsList: arr});
-        this.intervalID = setTimeout(this.listSMS.bind(this), 0);
-      },
-    );
-  };
+  //   SmsAndroid.list(
+  //     JSON.stringify(filter),
+  //     fail => {
+  //       console.log('Failed with this error: ' + fail);
+  //     },
+  //     (count, smsList) => {
+  //       var arr = JSON.parse(smsList);
+  //       // Alert.alert(JSON.stringify(arr));
+  //       // console.log(arr);
+  //       this.setState({smsList: arr});
+  //       this.intervalID = setTimeout(this.listSMS.bind(this), 0);
+  //     },
+  //   );
+  // };
 
   render() {
-    const {smsList} = this.state;
+    // const {smsList} = this.state;
     const {receiveSMS} = this.props;
+    console.log('getMessage', receiveSMS);
     return (
       <View style={styles.view1Container}>
         <View style={styles.view2Container}>
@@ -161,8 +162,8 @@ class GetMessageContainer extends Component {
           {/* <Button title="refresh list" onPress={this.listSMS} /> */}
         </View>
         <ScrollView>
-          {smsList !== '' ? (
-            <GetMessage smsList={smsList} receiveSMS={receiveSMS} />
+          {receiveSMS && receiveSMS.length ? (
+            <GetMessage receiveSMS={receiveSMS} />
           ) : (
             <Text style={styles.viewText1}>Không có tin nhắn nào</Text>
           )}

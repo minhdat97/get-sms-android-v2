@@ -6,14 +6,13 @@ import rootSagas from '../sagas';
 // import UsersRedirect from "../middlewares/UserRedirect";
 // import ChangePasswordRedirect from "../middlewares/ChangePasswordRedirect";
 
-export default function configureStore(initialState) {
+export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
 
   //  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 
   const store = createStore(
     reducer,
-    initialState,
     // composeEnhancers(
     //   applyMiddleware(sagaMiddleware),
     //   // sagaMiddleware,

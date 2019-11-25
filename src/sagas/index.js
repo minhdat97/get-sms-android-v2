@@ -1,6 +1,6 @@
 import {call, put, take, fork} from 'redux-saga/effects';
 import * as api from '../api';
-import * as receiveSMSRequest from '../actions/receiveSMS';
+// import * as receiveSMSRequest from '../actions/receiveSMS';
 import * as getSMSRequest from '../actions/getSMS';
 
 function* receiveSMS() {
@@ -10,7 +10,8 @@ function* receiveSMS() {
       const httpResponse = yield call(api.callApiReceiveMess, payload);
       yield put({type: 'RECEIVE_SMS_SUCCESS', httpResponse});
     } catch (error) {
-      yield put(receiveSMSRequest.requestErrorReceiveSMS(error));
+      // yield put(receiveSMSRequest.requestErrorReceiveSMS(error));
+      console.log(error);
     }
   }
 }

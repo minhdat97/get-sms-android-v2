@@ -1,5 +1,7 @@
+import {AsyncStorage} from 'react-native';
+
 const appInitialState = {
-  data: {},
+  payload: [],
 };
 
 const receiveSMSReducer = (state = appInitialState, action) => {
@@ -12,10 +14,23 @@ const receiveSMSReducer = (state = appInitialState, action) => {
     //     errorDetailLogin: action.payload.errorDetailLogin
     //   };
     case 'RECEIVE_SMS':
-      return {
-        ...state,
-        data: action.payload,
-      };
+      try {
+        AsyncStorage.setItem(
+          'data',
+          JSON.stringify([action.payload, ...state.payload]),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+      // return {
+      //   ...state,
+      //   payload: [...state.payload, action.payload],
+      //   // payload: state.payload.concat(action.payload),
+      // };
+
+      return Object.assign({}, state, {
+        payload: [action.payload, ...state.payload],
+      });
     default:
       return state;
   }
