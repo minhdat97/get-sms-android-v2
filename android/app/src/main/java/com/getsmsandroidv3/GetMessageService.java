@@ -174,7 +174,8 @@ public class GetMessageService extends Service {
         String content = extras.getString("content");
         String time = extras.getString("time");
 
-        if (sender != null & content != null & time != null) {
+
+        if (sender != null & content != null && time != null) {
             Log.d("onStartCommand", "info here");
             setNameSender("sender");
             setValueSender(sender);

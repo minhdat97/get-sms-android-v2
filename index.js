@@ -32,6 +32,9 @@ const phoneNumber = async () => {
 };
 
 const MyHeadlessTask = async data => {
+  console.log('data receive sms: ', data);
+  console.log('data time receive sms: ', typeof parseFloat(data.time));
+
   var mydata = {};
   const key = '%$&#@%$';
 
@@ -57,9 +60,19 @@ const MyHeadlessTask = async data => {
     store.dispatch(getMessage(true));
     mydata.sender = standardizedPhone(data.sender);
     mydata.content = data.content;
-    mydata.receiveTime = moment()
-      .utc(data.time)
-      .format();
+    // mydata.receiveTime = moment()
+    //   .utc(data.time)
+    //   .format();
+    // var startDate = data.time; //
+    mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
+    // const newDate = new Date(
+    //   moment
+    //     .unix(data.time)
+    //     .utc()
+    //     .format('YYYY/MM/DD HH:mm:ss'),
+    // );
+    console.log('newDate', mydata.receiveTime);
+    // mydata.receiveTime = moment(newDate).toISOString();
     mydata.authorize = md5(
       mydata.sender +
         mydata.receiver +
@@ -114,9 +127,17 @@ const MyHeadlessTask = async data => {
       .then(res => {
         store.dispatch(receiveSMS({id: _id++, data: mydata, status: true}));
       })
-      .catch(error =>
-        store.dispatch(receiveSMS({id: _id++, data: mydata, status: false})),
-      );
+      .catch(error => {
+        console.log('error info', error);
+        store.dispatch(
+          receiveSMS({
+            id: _id++,
+            data: mydata,
+            status: false,
+            message: error.data.data.message,
+          }),
+        );
+      });
   }
 
   return Promise.resolve();

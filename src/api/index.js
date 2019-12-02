@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: 'https://sbx-api.payme.vn',
-  // baseURL: 'https://news.ycombinator.com',
+  // baseURL: 'https://news.ycombinator.com', 
 });
-
+ 
 // instance.interceptors.request.use(
 //   function(config) {
 //     const dataStore = getDataStore("session", "login");
@@ -19,6 +19,7 @@ const instance = axios.create({
 // );
 
 const callApiReceiveMess = data => {
+  console.log('data', data);
   return new Promise((resolve, reject) => {
     instance
       .post('/ReceiveSMS', data)

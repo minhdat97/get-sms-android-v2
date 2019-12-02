@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.facebook.react.HeadlessJsTaskService;
 
+
 public class GetMessageReceiver extends BroadcastReceiver {
     // private static final String TAG = "SMSBroadcastReceiver";
     private static final String TAG = GetMessageReceiver.class.getSimpleName();
@@ -58,12 +59,30 @@ public class GetMessageReceiver extends BroadcastReceiver {
                 // Build the message to show.
                 sender = msgs[i].getOriginatingAddress();
                 content = msgs[i].getMessageBody();
-                long timestamp = (msgs[i].getTimestampMillis() / 1000);
+
+                //int calendarDate = calendar.get(CALENDAR.DATE);
+                Long timeStamp = (msgs[i].getTimestampMillis());
+                Log.d(TAG, "OnReceive Time: Timestamp " + timeStamp);
+                Long timestamp = (timeStamp) / 1000;
+                //Date gmt = new Date(timestamp);
+                //Date date = new Date(gmt.getTime() - Calendar.getInstance().getTimeZone().getOffset(gmt.getTime()));
+                //DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                //time = dateFormat.format(date);
+
+                //Date date = new Date(timestamp);
+                //DateFormat gmtFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+                //TimeZone gmtTime = TimeZone.getTimeZone("UTC");
+                //gmtFormat.setTimeZone(gmtTime);
+                //time = gmtFormat.format(date);
+                //Log.d(TAG, "Current Time: " + date);
+                //Log.d(TAG, "GMT Time: " + gmtFormat.format(date));
                 time = Long.toString(timestamp);
                 strMessage += "SMS from " + msgs[i].getOriginatingAddress();
                 strMessage += " :" + msgs[i].getMessageBody() + "\n";
                 // Log and display the SMS message.
                 Log.d(TAG, "onReceive: " + strMessage);
+                Log.d(TAG, "onReceive Time: " + time);
+
                 Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
             }
             extras.putString("time", time);

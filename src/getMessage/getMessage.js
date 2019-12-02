@@ -27,9 +27,9 @@ class GetMessage extends Component {
               />
               </View> */}
             <Text>
-              Ngày: {currentDate.getUTCHours()}h{currentDate.getUTCMinutes()}p -{' '}
-              {currentDate.getUTCDate()}/{currentDate.getUTCMonth() + 1}/
-              {currentDate.getUTCFullYear()}
+              Ngày: {currentDate.getHours()}h{currentDate.getMinutes()}p -{' '}
+              {currentDate.getDate()}/{currentDate.getMonth() + 1}/
+              {currentDate.getFullYear()}
             </Text>
 
             {/* <Text>Ngày: {sms.data.receiveTime}</Text> */}
@@ -37,7 +37,7 @@ class GetMessage extends Component {
               sms.status ? (
                 <Text>Trạng thái: SUCCESS</Text>
               ) : (
-                <Text>Trạng thái: FAILED</Text>
+                <Text>Trạng thái: FAILED - {sms.message}</Text>
               )
             ) : (
               <Text>Trạng thái: N/A</Text>
