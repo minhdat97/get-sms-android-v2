@@ -26,6 +26,11 @@ public class GetMessageService extends Service {
     private String nameContent, valueContent;
     private String nameTime, valueTime;
     private String nameAction, valueAction;
+    private String nameInternet;
+    private boolean valueInternet;
+    private String nameFailSend;
+    private boolean valueFailSend;
+
 
 
     private Handler handler = new Handler();
@@ -39,6 +44,9 @@ public class GetMessageService extends Service {
             myIntent.putExtra(getNameSender(), getValueSender());
             myIntent.putExtra(getNameContent(), getValueContent());
             myIntent.putExtra(getNameTime(), getValueTime());
+            myIntent.putExtra(getNameInternet(), getValueInternet());
+            myIntent.putExtra(getNameFailSend(), getValueFailSend());
+
 
             // if (extra ==)
             context.startService(myIntent);
@@ -146,6 +154,40 @@ public class GetMessageService extends Service {
         this.valueTime = globalVariable;
     }
 
+    // Internet
+    public String getNameInternet() {
+        return nameInternet;
+    }
+
+    public void setNameInternet(String globalVariable) {
+        this.nameInternet = globalVariable;
+    }
+
+    public boolean getValueInternet() {
+        return valueInternet;
+    }
+
+    public void setValueInternet(boolean globalVariable) {
+        this.valueInternet = globalVariable;
+    }
+
+    // FailSend
+    public String getNameFailSend() {
+        return nameFailSend;
+    }
+
+    public void setNameFailSend(String globalVariable) {
+        this.nameFailSend = globalVariable;
+    }
+
+    public boolean getValueFailSend() {
+        return valueFailSend;
+    }
+
+    public void setValueFailSend(boolean globalVariable) {
+        this.valueFailSend = globalVariable;
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -173,6 +215,10 @@ public class GetMessageService extends Service {
         String sender = extras.getString("sender");
         String content = extras.getString("content");
         String time = extras.getString("time");
+        boolean hasInternet = extras.getBoolean("hasInternet");
+        boolean failSend = extras.getBoolean("failSend");
+        Log.d("onStartCommand", "hasInternet" + hasInternet);
+        Log.d("onStartCommand", "failSend" + failSend);
 
 
         if (sender != null & content != null && time != null) {
@@ -196,6 +242,27 @@ public class GetMessageService extends Service {
         //         setValueAction("new_message");
         //     }
         // }
+        if(hasInternet)
+        {
+            setNameInternet("hasInternet");
+            setValueInternet(true);
+        }
+        else {
+            if(failSend)
+            {
+                Log.d("Service", "failSend true");
+                setNameFailSend("failSend");
+                setValueFailSend(true);
+            }
+            else {
+                Log.d("Service", "failSend false");
+                setNameFailSend("failSend");
+                setValueFailSend(false);
+            }
+            setNameInternet("hasInternet");
+            setValueInternet(false);
+        }
+
         if (isReady != null) {
             if(isReady.equals("true")) {
                 setNameIsReady("isReady");

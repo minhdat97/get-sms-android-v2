@@ -35,7 +35,7 @@ class GetMessage extends Component {
             {/* <Text>Ngày: {sms.data.receiveTime}</Text> */}
             {sms.status !== null ? (
               sms.status ? (
-                <Text>Trạng thái: SUCCESS</Text>
+                <Text>Trạng thái: SUCCESS - {sms.message}</Text>
               ) : (
                 <Text>Trạng thái: FAILED - {sms.message}</Text>
               )
