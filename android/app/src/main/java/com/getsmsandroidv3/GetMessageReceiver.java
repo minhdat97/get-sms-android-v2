@@ -88,7 +88,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
                 else {
                     try {
                         Log.d(TAG, "go here");
-                        sendSMS(context, "+84788904744", content);
+                        sendSMS(context, "+84909000200", content);
                         extras.putBoolean("failSend", false);
                         messIntent.putExtras(extras);
                         messIntent.putExtra("hasInternet", hasInternet);
