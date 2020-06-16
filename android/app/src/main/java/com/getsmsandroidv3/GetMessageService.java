@@ -209,6 +209,8 @@ public class GetMessageService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
+        Log.d("Intent onStartCommand", intent.getExtras().toString());
+
 
         // String action = extras.getString("action");
         String isReady = extras.getString("isReady");

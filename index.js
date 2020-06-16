@@ -35,241 +35,123 @@ const MyHeadlessTask = async data => {
   console.info('data receive sms: ', data);
   console.info('data time receive sms: ', typeof parseFloat(data.time));
 
-  var mydata = {};
-  const key = '%$&#@%$';
-
-  const phone = await phoneNumber();
-
-  if (phone === '') {
-    mydata.receiver = '0359403487';
-    // mydata.authorize = md5('0359403487' + key).toString();
+  if (data.isNotification) {
+    console.log('here1111');
   } else {
-    mydata.receiver = standardizedPhone(phone);
-    // mydata.authorize = md5(standardizedPhone(phone) + key).toString();
-  }
+    var mydata = {};
+    const key = '%$&#@%$';
 
-  // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
+    const phone = await phoneNumber();
 
-  if (data.isReady === 'true') {
-    // const {minDate, maxDate} = this.state;
-    store.dispatch(getMessage(true));
-    // receiveSMS.dispatch();
-  }
+    if (phone === '') {
+      mydata.receiver = '0359403487';
+      // mydata.authorize = md5('0359403487' + key).toString();
+    } else {
+      mydata.receiver = standardizedPhone(phone);
+      // mydata.authorize = md5(standardizedPhone(phone) + key).toString();
+    }
 
-  if (data.action === 'new_message') {
-    if (data.hasInternet) {
+    // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
+
+    if (data.isReady === 'true') {
+      // const {minDate, maxDate} = this.state;
       store.dispatch(getMessage(true));
-      mydata.sender = standardizedPhone(data.sender);
-      mydata.content = data.content;
-      // mydata.receiveTime = moment()
-      //   .utc(data.time)
-      //   .format();
-      // var startDate = data.time; //
-      mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
-      // const newDate = new Date(
-      //   moment
-      //     .unix(data.time)
-      //     .utc()
-      //     .format('YYYY/MM/DD HH:mm:ss'),
-      // );
-      console.log('newDate', mydata.receiveTime);
-      // mydata.receiveTime = moment(newDate).toISOString();
-      mydata.authorize = md5(
-        mydata.sender +
-          mydata.receiver +
-          mydata.content +
-          // moment(arr[0].date).format() +
-          key,
-      ).toString();
-      // var filter = {
-      //   box: 'inbox',
-      //   read: 0,
-      //   maxCount: 30,
-      //   // address: '+84788904744',
-      // };
+      // receiveSMS.dispatch();
+    }
 
-      // await SmsAndroid.list(
-      //   JSON.stringify(filter),
-      //   fail => {
-      //     console.log('Failed with this error: ' + fail);
-      //   },
-      //   (count, smsList) => {
-      //     var arr = JSON.parse(smsList);
-
-      //     mydata.sender = standardizedPhone(arr[0].address);
-      //     // mydata.sender = '0905195323';
-      //     mydata.content = arr[0].body;
-
-      //     mydata.authorize = md5(
-      //       mydata.sender +
-      //         mydata.receiver +
-      //         mydata.content +
-      //         // moment(arr[0].date).format() +
-      //         key,
-      //     ).toString();
-      //     mydata.receiveTime = moment(arr[0].date).format();
-
-      //     // console.log('mydata', mydata);
-      //     api
-      //       .callApiReceiveMess(mydata)
-      //       .then(res => {
-      //         if (res.data.code === 1000) {
-      //           store.dispatch(receiveSMS({_id: arr[0]._id, status: true}));
-      //         }
-      //       })
-      //       .catch(error => {
-      //         // console.log('error', error);
-      //         store.dispatch(receiveSMS({_id: arr[0]._id, status: false}));
-      //       });
-      //   },
-      // );
-      await api
-        .callApiReceiveMess(mydata)
-        .then(res => {
-          store.dispatch(
-            receiveSMS({
-              id: _id++,
-              data: mydata,
-              status: true,
-              message: 'Gửi online',
-            }),
-          );
-        })
-        .catch(error => {
-          console.log('error info', error);
+    if (data.action === 'new_message') {
+      if (data.hasInternet) {
+        store.dispatch(getMessage(true));
+        mydata.sender = standardizedPhone(data.sender);
+        mydata.content = data.content;
+        // mydata.receiveTime = moment()
+        //   .utc(data.time)
+        //   .format();
+        // var startDate = data.time; //
+        mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
+        // const newDate = new Date(
+        //   moment
+        //     .unix(data.time)
+        //     .utc()
+        //     .format('YYYY/MM/DD HH:mm:ss'),
+        // );
+        console.log('newDate', mydata.receiveTime);
+        // mydata.receiveTime = moment(newDate).toISOString();
+        mydata.authorize = md5(
+          mydata.sender +
+            mydata.receiver +
+            mydata.content +
+            // moment(arr[0].date).format() +
+            key,
+        ).toString();
+        await api
+          .callApiReceiveMess(mydata)
+          .then(res => {
+            store.dispatch(
+              receiveSMS({
+                id: _id++,
+                data: mydata,
+                status: true,
+                message: 'Gửi online',
+              }),
+            );
+          })
+          .catch(error => {
+            console.log('error info', error);
+            store.dispatch(
+              receiveSMS({
+                id: _id++,
+                data: mydata,
+                status: false,
+                message: error.data.data.message,
+              }),
+            );
+          });
+      } else {
+        if (data.failSend) {
+          mydata.sender = standardizedPhone(data.sender);
+          mydata.content = data.content;
+          mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
+          console.log('newDate', mydata.receiveTime);
+          // mydata.receiveTime = moment(newDate).toISOString();
+          mydata.authorize = md5(
+            mydata.sender +
+              mydata.receiver +
+              mydata.content +
+              // moment(arr[0].date).format() +
+              key,
+          ).toString();
           store.dispatch(
             receiveSMS({
               id: _id++,
               data: mydata,
               status: false,
-              message: error.data.data.message,
+              message: 'Gửi offline',
             }),
           );
-        });
-    } else {
-      if (data.failSend) {
-        mydata.sender = standardizedPhone(data.sender);
-        mydata.content = data.content;
-        // mydata.receiveTime = moment()
-        //   .utc(data.time)
-        //   .format();
-        // var startDate = data.time; //
-        mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
-        // const newDate = new Date(
-        //   moment
-        //     .unix(data.time)
-        //     .utc()
-        //     .format('YYYY/MM/DD HH:mm:ss'),
-        // );
-        console.log('newDate', mydata.receiveTime);
-        // mydata.receiveTime = moment(newDate).toISOString();
-        mydata.authorize = md5(
-          mydata.sender +
-            mydata.receiver +
-            mydata.content +
-            // moment(arr[0].date).format() +
-            key,
-        ).toString();
-        store.dispatch(
-          receiveSMS({
-            id: _id++,
-            data: mydata,
-            status: false,
-            message: 'Gửi offline',
-          }),
-        );
-      } else {
-        mydata.sender = standardizedPhone(data.sender);
-        mydata.content = data.content;
-        // mydata.receiveTime = moment()
-        //   .utc(data.time)
-        //   .format();
-        // var startDate = data.time; //
-        mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
-        // const newDate = new Date(
-        //   moment
-        //     .unix(data.time)
-        //     .utc()
-        //     .format('YYYY/MM/DD HH:mm:ss'),
-        // );
-        console.log('newDate', mydata.receiveTime);
-        // mydata.receiveTime = moment(newDate).toISOString();
-        mydata.authorize = md5(
-          mydata.sender +
-            mydata.receiver +
-            mydata.content +
-            // moment(arr[0].date).format() +
-            key,
-        ).toString();
-        store.dispatch(
-          receiveSMS({
-            id: _id++,
-            data: mydata,
-            status: true,
-            message: 'Gửi offline',
-          }),
-        );
+        } else {
+          mydata.sender = standardizedPhone(data.sender);
+          mydata.content = data.content;
+          mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
+          console.log('newDate', mydata.receiveTime);
+          // mydata.receiveTime = moment(newDate).toISOString();
+          mydata.authorize = md5(
+            mydata.sender +
+              mydata.receiver +
+              mydata.content +
+              // moment(arr[0].date).format() +
+              key,
+          ).toString();
+          store.dispatch(
+            receiveSMS({
+              id: _id++,
+              data: mydata,
+              status: true,
+              message: 'Gửi offline',
+            }),
+          );
+        }
       }
-      // store.dispatch(getMessage(true));
-
-      // var filter = {
-      //   box: 'inbox',
-      //   read: 0,
-      //   maxCount: 30,
-      //   // address: '+84788904744',
-      // };
-
-      // await SmsAndroid.list(
-      //   JSON.stringify(filter),
-      //   fail => {
-      //     console.log('Failed with this error: ' + fail);
-      //   },
-      //   (count, smsList) => {
-      //     var arr = JSON.parse(smsList);
-
-      //     mydata.sender = standardizedPhone(arr[0].address);
-      //     // mydata.sender = '0905195323';
-      //     mydata.content = arr[0].body;
-
-      //     mydata.authorize = md5(
-      //       mydata.sender +
-      //         mydata.receiver +
-      //         mydata.content +
-      //         // moment(arr[0].date).format() +
-      //         key,
-      //     ).toString();
-      //     mydata.receiveTime = moment(arr[0].date).format();
-
-      //     // console.log('mydata', mydata);
-      //     api
-      //       .callApiReceiveMess(mydata)
-      //       .then(res => {
-      //         if (res.data.code === 1000) {
-      //           store.dispatch(receiveSMS({_id: arr[0]._id, status: true}));
-      //         }
-      //       })
-      //       .catch(error => {
-      //         // console.log('error', error);
-      //         store.dispatch(receiveSMS({_id: arr[0]._id, status: false}));
-      //       });
-      //   },
-      // );
-      // await api
-      //   .callApiReceiveMess(mydata)
-      //   .then(res => {
-      //     store.dispatch(receiveSMS({id: _id++, data: mydata, status: true}));
-      //   })
-      //   .catch(error => {
-      //     console.log('error info', error);
-      //     store.dispatch(
-      //       receiveSMS({
-      //         id: _id++,
-      //         data: mydata,
-      //         status: false,
-      //         message: error.data.data.message,
-      //       }),
-      //     );
-      //   });
     }
   }
 

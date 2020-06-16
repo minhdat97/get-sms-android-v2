@@ -3,12 +3,14 @@ package com.getsmsandroidv3;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -32,18 +34,35 @@ public class GetMessageReceiver extends BroadcastReceiver {
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onReceive(Context context, Intent intent) {
-            boolean hasInternet = isNetworkAvailable(context);
-            Intent messIntent = new Intent(context, GetMessageService.class);
-            Bundle bundle = intent.getExtras();
-            Bundle extras = new Bundle();
-            SmsMessage[] msgs;
-            String strMessage = "";
-            String content = "";
-            String sender = "";
-            String time = "";
-            String format = bundle.getString("format");
-            // Retrieve the SMS message received.
-            Object[] pdus = (Object[]) bundle.get(pdu_type);
+        Log.d("Intent", intent.getExtras().toString());
+
+        boolean hasInternet = isNetworkAvailable(context);
+        Intent messIntent = new Intent(context, GetMessageService.class);
+        Intent notificationIntent = new Intent(context, GetNotificationService.class);
+        Log.d("Notification", notificationIntent.toString());
+//        Log.d("Mess", messIntent.toString());
+
+        Bundle bundle = intent.getExtras();
+        Bundle extras = new Bundle();
+        SmsMessage[] msgs;
+        String strMessage = "";
+        String content = "";
+        String sender = "";
+        String time = "";
+        String format = bundle.getString("format");
+        // Retrieve the SMS message received.
+        Object[] pdus = (Object[]) bundle.get(pdu_type);
+//        if (notificationIntent != null) {
+//            Bundle extrasNoti = notificationIntent.getExtras();
+//            String notificationTitle = extrasNoti.getString(Notification.EXTRA_TITLE);
+//            int notificationIcon = extrasNoti.getInt(Notification.EXTRA_SMALL_ICON);
+//            Bitmap notificationLargeIcon = ((Bitmap) extrasNoti.getParcelable(Notification.EXTRA_LARGE_ICON));
+//            CharSequence notificationText = extrasNoti.getCharSequence(Notification.EXTRA_TEXT);
+//            CharSequence notificationSubText = extrasNoti.getCharSequence(Notification.EXTRA_SUB_TEXT);
+//
+//            Log.d("Notification Extras Title", notificationTitle);
+//            Log.d("Notification Extras Text", notificationText.toString());
+//        }
             if (pdus != null) {
                 // Check the Android version.
                 boolean isVersionM = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
