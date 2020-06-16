@@ -7,14 +7,8 @@
  */
 
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  AppState,
-  AsyncStorage,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, AppState} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import GetMessage from './GetMessage';
 import GetMessageContainer from './src/getMessage/getMessage.container';
