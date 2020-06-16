@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import styles from './getMessage.style';
 import GetMessage from './getMessage';
-import SmsAndroid from 'react-native-get-sms-android';
 // import DeviceInfo from 'react-native-device-info';
 
 class GetMessageContainer extends Component {
