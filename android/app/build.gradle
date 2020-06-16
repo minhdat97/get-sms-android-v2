@@ -190,7 +190,6 @@ android {
 dependencies {
     implementation project(':react-native-background-timer')
     implementation project(':react-native-device-info')
-    implementation project(':react-native-get-sms-android')
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
