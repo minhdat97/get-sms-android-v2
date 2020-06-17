@@ -24,8 +24,8 @@ public class GetNotificationService extends NotificationListenerService {
         super.onCreate();
         getMessagerReceive = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction("com.example.notifyservice.NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
-        registerReceiver(getMessagerReceive,filter);
+        filter.addAction("com.getsmsandroidv3.NOTIFICATION_LISTENER_SERVICE");
+        registerReceiver(getMessagerReceive, filter);
         Log.i("NLService", "NLService created!");
     }
 
@@ -39,10 +39,10 @@ public class GetNotificationService extends NotificationListenerService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //retrieving data from the received intent
-        if(intent.hasExtra("command")) {
-            Log.i("NLService", "Started for command '"+intent.getStringExtra("command"));
+        if (intent.hasExtra("command")) {
+            Log.i("NLService", "Started for command '" + intent.getStringExtra("command"));
 //            broadcastStatus();
-        } else if(intent.hasExtra("id")) {
+        } else if (intent.hasExtra("id")) {
             int id = intent.getIntExtra("id", 0);
             String message = intent.getStringExtra("msg");
             Log.i("NLService", "Requested to start explicitly - id : " + id + " message : " + message);
@@ -54,20 +54,15 @@ public class GetNotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        Notification mNotification=sbn.getNotification();
+        Notification mNotification = sbn.getNotification();
 
-        if (mNotification!=null){
+        if (mNotification != null) {
             Bundle extras = mNotification.extras;
             Log.d("mNotification", extras.toString());
             Context context = getApplicationContext();
-//            Intent intent = new Intent(MainActivity.INTENT_ACTION_NOTIFICATION);
-            Intent intent = new  Intent("com.example.notifyservice.NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
+            Intent intent = new Intent("com.getsmsandroidv3.NOTIFICATION_LISTENER_SERVICE");
             intent.putExtras(extras);
-            Log.d("notification_event_onNotificationPosted", intent.getExtras().toString());
-
             sendBroadcast(intent);
-//            context.startService(intent);
-//            HeadlessJsTaskService.acquireWakeLockNow(context);
 
 //            Notification.Action[] mActions=mNotification.actions;
 //            if (mActions!=null){
@@ -85,13 +80,6 @@ public class GetNotificationService extends NotificationListenerService {
         public void onReceive(Context context, Intent intent) {
             Intent myIntent = new Intent(context, GetMessageEventService.class);
 
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//
-//            } else {
-//
-//            }
-//            String temp = intent.getStringExtra("notification_event") + "\n" + txtView.getText();
-
             Bundle bundle = intent.getExtras();
             Log.d("notification_event", intent.getExtras().toString());
             String notificationTitle = bundle.getString(Notification.EXTRA_TITLE);
@@ -106,7 +94,6 @@ public class GetNotificationService extends NotificationListenerService {
 
             context.startService(myIntent);
             HeadlessJsTaskService.acquireWakeLockNow(context);
-//            txtView.setText(temp);
         }
     }
 

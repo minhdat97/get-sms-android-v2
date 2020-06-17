@@ -52,78 +52,61 @@ public class GetMessageReceiver extends BroadcastReceiver {
         String format = bundle.getString("format");
         // Retrieve the SMS message received.
         Object[] pdus = (Object[]) bundle.get(pdu_type);
-//        if (notificationIntent != null) {
-//            Bundle extrasNoti = notificationIntent.getExtras();
-//            String notificationTitle = extrasNoti.getString(Notification.EXTRA_TITLE);
-//            int notificationIcon = extrasNoti.getInt(Notification.EXTRA_SMALL_ICON);
-//            Bitmap notificationLargeIcon = ((Bitmap) extrasNoti.getParcelable(Notification.EXTRA_LARGE_ICON));
-//            CharSequence notificationText = extrasNoti.getCharSequence(Notification.EXTRA_TEXT);
-//            CharSequence notificationSubText = extrasNoti.getCharSequence(Notification.EXTRA_SUB_TEXT);
-//
-//            Log.d("Notification Extras Title", notificationTitle);
-//            Log.d("Notification Extras Text", notificationText.toString());
-//        }
-            if (pdus != null) {
-                // Check the Android version.
-                boolean isVersionM = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
-                // Fill the msgs array.
-                msgs = new SmsMessage[pdus.length];
-                for (int i = 0; i < msgs.length; i++) {
-                    // Check Android version and use appropriate createFromPdu.
-                    if (isVersionM) {
-                        // If Android version M or newer:
-                        msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i], format);
-                    } else {
-                        // If Android version L or older:
-                        msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                    }
-                    // Build the message to show.
-                    sender = msgs[i].getOriginatingAddress();
-                    content = msgs[i].getMessageBody();
-
-                    Long timeStamp = (msgs[i].getTimestampMillis());
-                    Log.d(TAG, "OnReceive Time: Timestamp " + timeStamp);
-                    Long timestamp = (timeStamp) / 1000;
-                    time = Long.toString(timestamp);
-                    strMessage += "SMS from " + msgs[i].getOriginatingAddress();
-                    strMessage += " :" + msgs[i].getMessageBody() + "\n";
-                    // Log and display the SMS message.
-                    Log.d(TAG, "onReceive: " + strMessage);
-                    Log.d(TAG, "onReceive Time: " + time);
-
-                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
+        if (pdus != null) {
+            // Check the Android version.
+            boolean isVersionM = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
+            // Fill the msgs array.
+            msgs = new SmsMessage[pdus.length];
+            for (int i = 0; i < msgs.length; i++) {
+                // Check Android version and use appropriate createFromPdu.
+                if (isVersionM) {
+                    // If Android version M or newer:
+                    msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i], format);
+                } else {
+                    // If Android version L or older:
+                    msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                 }
-                extras.putString("time", time);
-                // extras.putString("action", "true");
-                extras.putString("sender", sender);
-                extras.putString("content", content);
-                // messIntent.putExtra("time", time);
-                // messIntent.putExtra("sender", sender);
-                // messIntent.putExtra("content", content);
-                if(hasInternet){
+                // Build the message to show.
+                sender = msgs[i].getOriginatingAddress();
+                content = msgs[i].getMessageBody();
+
+                Long timeStamp = (msgs[i].getTimestampMillis());
+                Log.d(TAG, "OnReceive Time: Timestamp " + timeStamp);
+                Long timestamp = (timeStamp) / 1000;
+                time = Long.toString(timestamp);
+                strMessage += "SMS from " + msgs[i].getOriginatingAddress();
+                strMessage += " :" + msgs[i].getMessageBody() + "\n";
+                // Log and display the SMS message.
+                Log.d(TAG, "onReceive: " + strMessage);
+                Log.d(TAG, "onReceive Time: " + time);
+
+                Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
+            }
+            extras.putString("time", time);
+            extras.putString("sender", sender);
+            extras.putString("content", content);
+            if (hasInternet) {
+                messIntent.putExtras(extras);
+                messIntent.putExtra("hasInternet", hasInternet);
+            } else {
+                try {
+                    Log.d(TAG, "go here");
+                    sendSMS(context, "+84909000200", content);
+                    extras.putBoolean("failSend", false);
                     messIntent.putExtras(extras);
                     messIntent.putExtra("hasInternet", hasInternet);
-                }
-                else {
-                    try {
-                        Log.d(TAG, "go here");
-                        sendSMS(context, "+84909000200", content);
-                        extras.putBoolean("failSend", false);
-                        messIntent.putExtras(extras);
-                        messIntent.putExtra("hasInternet", hasInternet);
-                    }
-                    catch (Exception e){
-                        Log.d(TAG, "go here1: " + e);
-                        extras.putBoolean("failSend", true);
-                        messIntent.putExtras(extras);
-                        messIntent.putExtra("hasInternet", hasInternet);
-                        Toast.makeText(context, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
-                    }
+                } catch (Exception e) {
+                    Log.d(TAG, "go here1: " + e);
+                    extras.putBoolean("failSend", true);
+                    messIntent.putExtras(extras);
+                    messIntent.putExtra("hasInternet", hasInternet);
+                    Toast.makeText(context, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
                 }
             }
+        }
 
-            context.startService(messIntent);
-            HeadlessJsTaskService.acquireWakeLockNow(context);
+        context.startService(messIntent);
+        HeadlessJsTaskService.acquireWakeLockNow(context);
     }
 
 
@@ -142,7 +125,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
         mContext.getApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String state= "";
+                String state = "";
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         /*ContentValues values = new ContentValues();
@@ -175,7 +158,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
         mContext.getApplicationContext().registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String state="";
+                String state = "";
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         state = "SMS delivered";
@@ -192,14 +175,11 @@ public class GetMessageReceiver extends BroadcastReceiver {
         SmsManager sms = SmsManager.getDefault();
         int length = message.length();
 
-        if(length > MAX_SMS_MESSAGE_LENGTH)
-        {
+        if (length > MAX_SMS_MESSAGE_LENGTH) {
             ArrayList<String> messagelist = sms.divideMessage(message);
 
             sms.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null);
-        }
-        else
-        {
+        } else {
             sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
         }
 //        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
@@ -207,20 +187,20 @@ public class GetMessageReceiver extends BroadcastReceiver {
 
     private boolean isAppOnForeground(Context context) {
         /**
-          We need to check if app is in foreground otherwise the app will crash.
+         We need to check if app is in foreground otherwise the app will crash.
          http://stackoverflow.com/questions/8489993/check-android-application-is-in-foreground-or-not
-        **/
+         **/
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses =
-        activityManager.getRunningAppProcesses();
+                activityManager.getRunningAppProcesses();
         if (appProcesses == null) {
             return false;
         }
         final String packageName = context.getPackageName();
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
             if (appProcess.importance ==
-            ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
-             appProcess.processName.equals(packageName)) {
+                    ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
+                    appProcess.processName.equals(packageName)) {
                 return true;
             }
         }
@@ -229,7 +209,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager)
-        context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return (netInfo != null && netInfo.isConnected());
     }
