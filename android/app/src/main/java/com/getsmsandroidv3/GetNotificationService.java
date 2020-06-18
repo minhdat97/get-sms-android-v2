@@ -61,20 +61,12 @@ public class GetNotificationService extends NotificationListenerService {
 
         if (mNotification != null) {
             Bundle extras = mNotification.extras;
+            extras.putString("packageName", packageName);
             Log.d("mNotification", extras.toString());
             Context context = getApplicationContext();
             Intent intent = new Intent("com.getsmsandroidv3.NOTIFICATION_LISTENER_SERVICE");
             intent.putExtras(extras);
             sendBroadcast(intent);
-
-//            Notification.Action[] mActions=mNotification.actions;
-//            if (mActions!=null){
-//                for (Notification.Action mAction:mActions){
-//                    int icon=mAction.icon;
-//                    CharSequence actionTitle=mAction.title;
-//                    PendingIntent pendingIntent=mAction.actionIntent;
-//                }
-//            }
         }
     }
 
@@ -87,17 +79,17 @@ public class GetNotificationService extends NotificationListenerService {
             Log.d("notification_event", intent.getExtras().toString());
             String notificationTitle = bundle.getString(Notification.EXTRA_TITLE);
             CharSequence notificationText = bundle.getCharSequence(Notification.EXTRA_TEXT);
-//            CharSequence notificationSubText = bundle.getCharSequence(Notification.EXTRA_SUB_TEXT);
-//            String notificationApplicationInfo = bundle.getString("android.rebuild.applicationInfo");
+            String notificationApplicationInfo = bundle.getString("packageName");
 
             Log.d("notification_event_title", notificationTitle);
             Log.d("notification_event_text", notificationText.toString());
-//            Log.d("notification_event_applicationInfo", notificationApplicationInfo);
+            Log.d("notification_event_packageName", notificationApplicationInfo);
 
-            if (notificationTitle != null && notificationText != null) {
+            if (notificationTitle != null && notificationText != null && notificationApplicationInfo != null) {
                 myIntent.putExtra("isNotification", true);
                 myIntent.putExtra("title", notificationTitle);
                 myIntent.putExtra("text", notificationText.toString());
+                myIntent.putExtra("packageName", notificationApplicationInfo);
             }
 
             context.startService(myIntent);
