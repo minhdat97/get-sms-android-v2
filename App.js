@@ -11,7 +11,7 @@ import {StyleSheet, Text, View, TouchableOpacity, AppState} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import GetMessage from './GetMessage';
-import GetMessageContainer from './src/getMessage/getMessage.container';
+import GetMessageContainer from './src/component/getMessage/getMessage.container';
 import BackgroundTimer from 'react-native-background-timer';
 import * as api from './src/api';
 import DeviceInfo from 'react-native-device-info';
