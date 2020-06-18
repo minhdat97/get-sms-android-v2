@@ -84,13 +84,18 @@ public class GetNotificationService extends NotificationListenerService {
             Log.d("notification_event", intent.getExtras().toString());
             String notificationTitle = bundle.getString(Notification.EXTRA_TITLE);
             CharSequence notificationText = bundle.getCharSequence(Notification.EXTRA_TEXT);
-            CharSequence notificationSubText = bundle.getCharSequence(Notification.EXTRA_SUB_TEXT);
+//            CharSequence notificationSubText = bundle.getCharSequence(Notification.EXTRA_SUB_TEXT);
+//            String notificationApplicationInfo = bundle.getString("android.rebuild.applicationInfo");
+
             Log.d("notification_event_title", notificationTitle);
             Log.d("notification_event_text", notificationText.toString());
+//            Log.d("notification_event_applicationInfo", notificationApplicationInfo);
 
-            myIntent.putExtra("isNotification", true);
-            myIntent.putExtra("title", notificationTitle);
-            myIntent.putExtra("text", notificationText.toString());
+            if (notificationTitle != null && notificationText != null) {
+                myIntent.putExtra("isNotification", true);
+                myIntent.putExtra("title", notificationTitle);
+                myIntent.putExtra("text", notificationText.toString());
+            }
 
             context.startService(myIntent);
             HeadlessJsTaskService.acquireWakeLockNow(context);
