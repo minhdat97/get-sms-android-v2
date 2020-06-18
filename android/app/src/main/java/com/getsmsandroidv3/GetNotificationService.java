@@ -54,7 +54,10 @@ public class GetNotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        String packageName = sbn.getPackageName();
         Notification mNotification = sbn.getNotification();
+
+        Log.d("packageName", packageName);
 
         if (mNotification != null) {
             Bundle extras = mNotification.extras;
