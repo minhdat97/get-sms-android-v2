@@ -26,7 +26,6 @@ import com.facebook.react.HeadlessJsTaskService;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GetMessageReceiver extends BroadcastReceiver {
     private static final String TAG = GetMessageReceiver.class.getSimpleName();
     public static final String pdu_type = "pdus";
@@ -40,7 +39,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
         Intent messIntent = new Intent(context, GetMessageService.class);
         Intent notificationIntent = new Intent(context, GetNotificationService.class);
         Log.d("Notification", notificationIntent.toString());
-//        Log.d("Mess", messIntent.toString());
+        // Log.d("Mess", messIntent.toString());
 
         Bundle bundle = intent.getExtras();
         Bundle extras = new Bundle();
@@ -74,8 +73,8 @@ public class GetMessageReceiver extends BroadcastReceiver {
                 Log.d(TAG, "OnReceive Time: Timestamp " + timeStamp);
                 Long timestamp = (timeStamp) / 1000;
                 time = Long.toString(timestamp);
-                strMessage += "SMS from " + msgs[i].getOriginatingAddress();
-                strMessage += " :" + msgs[i].getMessageBody() + "\n";
+                // strMessage += "SMS from " + msgs[i].getOriginatingAddress();
+                // strMessage += " :" + msgs[i].getMessageBody() + "\n";
                 // Log and display the SMS message.
                 Log.d(TAG, "onReceive: " + strMessage);
                 Log.d(TAG, "onReceive Time: " + time);
@@ -109,17 +108,14 @@ public class GetMessageReceiver extends BroadcastReceiver {
         HeadlessJsTaskService.acquireWakeLockNow(context);
     }
 
-
     private void sendSMS(Context mContext, String phoneNumber, String message) {
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
         int MAX_SMS_MESSAGE_LENGTH = 160;
 
-        PendingIntent sentPI = PendingIntent.getBroadcast(mContext, 0, new Intent(
-                SENT), 0);
+        PendingIntent sentPI = PendingIntent.getBroadcast(mContext, 0, new Intent(SENT), 0);
 
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(mContext, 0,
-                new Intent(DELIVERED), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(mContext, 0, new Intent(DELIVERED), 0);
 
         // ---when the SMS has been sent---
         mContext.getApplicationContext().registerReceiver(new BroadcastReceiver() {
@@ -128,11 +124,12 @@ public class GetMessageReceiver extends BroadcastReceiver {
                 String state = "";
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        /*ContentValues values = new ContentValues();
-                        values.put("address", phoneNumber);// txtPhoneNo.getText().toString());
-                        values.put("body", message);
-                        context.getContentResolver().insert(
-                                Uri.parse("content://sms/sent"), values);*/
+                        /*
+                         * ContentValues values = new ContentValues(); values.put("address",
+                         * phoneNumber);// txtPhoneNo.getText().toString()); values.put("body",
+                         * message); context.getContentResolver().insert(
+                         * Uri.parse("content://sms/sent"), values);
+                         */
 
                         state = "SMS sent successfully";
                         break;
@@ -182,25 +179,23 @@ public class GetMessageReceiver extends BroadcastReceiver {
         } else {
             sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
         }
-//        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+        // sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
     }
 
     private boolean isAppOnForeground(Context context) {
         /**
-         We need to check if app is in foreground otherwise the app will crash.
-         http://stackoverflow.com/questions/8489993/check-android-application-is-in-foreground-or-not
+         * We need to check if app is in foreground otherwise the app will crash.
+         * http://stackoverflow.com/questions/8489993/check-android-application-is-in-foreground-or-not
          **/
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses =
-                activityManager.getRunningAppProcesses();
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         if (appProcesses == null) {
             return false;
         }
         final String packageName = context.getPackageName();
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.importance ==
-                    ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
-                    appProcess.processName.equals(packageName)) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && appProcess.processName.equals(packageName)) {
                 return true;
             }
         }
@@ -208,8 +203,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return (netInfo != null && netInfo.isConnected());
     }
