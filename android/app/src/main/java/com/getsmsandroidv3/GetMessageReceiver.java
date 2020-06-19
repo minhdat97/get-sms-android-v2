@@ -68,7 +68,7 @@ public class GetMessageReceiver extends BroadcastReceiver {
                 }
                 // Build the message to show.
                 sender = msgs[i].getOriginatingAddress();
-                content = msgs[i].getMessageBody();
+                content += msgs[i].getMessageBody();
 
                 Long timeStamp = (msgs[i].getTimestampMillis());
                 Log.d(TAG, "OnReceive Time: Timestamp " + timeStamp);

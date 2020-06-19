@@ -17,14 +17,14 @@ import com.facebook.react.HeadlessJsTaskService;
 
 public class GetNotificationService extends NotificationListenerService {
     private NotificationReceiver getMessagerReceive;
-    public static final String ACTION_STATUS_BROADCAST = "com.getsmsandroidv3.GetNotificationService";
+    public static final String ACTION_STATUS_BROADCAST = "com.getsmsandroidv3.NOTIFICATION_LISTENER_SERVICE";
 
     @Override
     public void onCreate() {
         super.onCreate();
         getMessagerReceive = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction("com.getsmsandroidv3.NOTIFICATION_LISTENER_SERVICE");
+        filter.addAction(ACTION_STATUS_BROADCAST);
         registerReceiver(getMessagerReceive, filter);
         Log.i("NLService", "NLService created!");
     }
@@ -38,6 +38,8 @@ public class GetNotificationService extends NotificationListenerService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Bundle extras = intent.getExtras();
+        Log.d("Intent111", intent.getExtras().toString());
         //retrieving data from the received intent
         if (intent.hasExtra("command")) {
             Log.i("NLService", "Started for command '" + intent.getStringExtra("command"));
@@ -63,42 +65,51 @@ public class GetNotificationService extends NotificationListenerService {
             Bundle extras = mNotification.extras;
             extras.putString("packageName", packageName);
             Log.d("mNotification", extras.toString());
-            Context context = getApplicationContext();
-            Intent intent = new Intent("com.getsmsandroidv3.NOTIFICATION_LISTENER_SERVICE");
+            Intent intent = new Intent(ACTION_STATUS_BROADCAST);
             intent.putExtras(extras);
             sendBroadcast(intent);
         }
     }
 
-    class NotificationReceiver extends BroadcastReceiver {
+    static class NotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Intent myIntent = new Intent(context, GetMessageEventService.class);
+            if (intent.getAction().equalsIgnoreCase(ACTION_STATUS_BROADCAST)) {
+                Log.d("INFO1111", intent.getExtras().toString());
+                //finish(); // do here whatever you want
+                Intent myIntent = new Intent(context, GetMessageEventService.class);
 
-            Bundle bundle = intent.getExtras();
-            Log.d("notification_event", intent.getExtras().toString());
-            String notificationTitle = bundle.getString(Notification.EXTRA_TITLE);
-            CharSequence notificationText = bundle.getCharSequence(Notification.EXTRA_TEXT);
-            String notificationApplicationInfo = bundle.getString("packageName");
+                Bundle bundle = intent.getExtras();
 
-            Log.d("notification_event_title", notificationTitle);
-            Log.d("notification_event_text", notificationText.toString());
-            Log.d("notification_event_packageName", notificationApplicationInfo);
+                Log.d("notification_event", intent.getExtras().toString());
+                String notificationTitle = bundle.getString(Notification.EXTRA_TITLE);
+                CharSequence notificationText = bundle.getCharSequence(Notification.EXTRA_TEXT);
+                String notificationApplicationInfo = bundle.getString("packageName");
 
-            if (notificationTitle != null && notificationText != null && notificationApplicationInfo != null) {
-                myIntent.putExtra("isNotification", true);
-                myIntent.putExtra("title", notificationTitle);
-                myIntent.putExtra("text", notificationText.toString());
-                myIntent.putExtra("packageName", notificationApplicationInfo);
+                Log.d("notification_event_title", notificationTitle);
+                Log.d("notification_event_text", notificationText.toString());
+                Log.d("notification_event_packageName", notificationApplicationInfo);
+
+                if (notificationTitle != null && notificationText != null && notificationApplicationInfo != null) {
+                    myIntent.putExtra("isNotification", true);
+                    myIntent.putExtra("title", notificationTitle);
+                    myIntent.putExtra("text", notificationText.toString());
+                    myIntent.putExtra("packageName", notificationApplicationInfo);
+                }
+                context.startService(myIntent);
+                HeadlessJsTaskService.acquireWakeLockNow(context);
             }
-
-            context.startService(myIntent);
-            HeadlessJsTaskService.acquireWakeLockNow(context);
         }
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        super.onNotificationRemoved(sbn);
 
+        Notification notification = sbn.getNotification();
+        String notificationText = notification.extras.getString(Notification.EXTRA_TEXT);
+
+        Log.d(getClass().getSimpleName(),
+                String.format("Dismissed notification: %s", notificationText));
     }
 }
