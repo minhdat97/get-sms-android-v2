@@ -78,7 +78,6 @@ public class GetNotificationService extends NotificationListenerService {
                 Log.d("INFO1111", intent.getExtras().toString());
                 //finish(); // do here whatever you want
                 Intent myIntent = new Intent(context, GetMessageEventService.class);
-
                 Bundle bundle = intent.getExtras();
 
                 Log.d("notification_event", intent.getExtras().toString());
@@ -86,15 +85,15 @@ public class GetNotificationService extends NotificationListenerService {
                 CharSequence notificationText = bundle.getCharSequence(Notification.EXTRA_TEXT);
                 String notificationApplicationInfo = bundle.getString("packageName");
 
-                Log.d("notification_event_title", notificationTitle);
-                Log.d("notification_event_text", notificationText.toString());
-                Log.d("notification_event_packageName", notificationApplicationInfo);
-
                 if (notificationTitle != null && notificationText != null && notificationApplicationInfo != null) {
+                    Log.d("notification_event_title", notificationTitle);
+                    Log.d("notification_event_text", notificationText.toString());
+                    Log.d("notification_event_packageName", notificationApplicationInfo);
                     myIntent.putExtra("isNotification", true);
                     myIntent.putExtra("title", notificationTitle);
                     myIntent.putExtra("text", notificationText.toString());
                     myIntent.putExtra("packageName", notificationApplicationInfo);
+
                 }
                 context.startService(myIntent);
                 HeadlessJsTaskService.acquireWakeLockNow(context);

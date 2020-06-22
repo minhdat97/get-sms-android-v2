@@ -32,6 +32,13 @@ public class MainActivity extends ReactActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Here we get a reference to the image we will modify when a notification is received
+        // If the user did not turn the notification listener service on we prompt him to do so
+        if (!isNotificationServiceEnabled()) {
+            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
+            enableNotificationListenerAlertDialog.show();
+        }
         Intent intent = new Intent(getApplicationContext(), GetNotificationService.class);
         Bundle dataIntent = new Bundle();
         Context context = getApplicationContext();
@@ -40,16 +47,9 @@ public class MainActivity extends ReactActivity {
         dataIntent.putString("msg", "hi");
 
         intent.putExtras(dataIntent);
-        context.startService(intent);
-        HeadlessJsTaskService.acquireWakeLockNow(context);
-
-        super.onCreate(savedInstanceState);
-        // Here we get a reference to the image we will modify when a notification is received
-        // If the user did not turn the notification listener service on we prompt him to do so
-        if (!isNotificationServiceEnabled()) {
-            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
-            enableNotificationListenerAlertDialog.show();
-        }
+        sendBroadcast(intent);
+//        context.startService(intent);
+//        HeadlessJsTaskService.acquireWakeLockNow(context);
     }
 
     //        @Override
@@ -64,29 +64,18 @@ public class MainActivity extends ReactActivity {
 //        super.onStop();
 //        LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
 //    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mReceiver == null) mReceiver = new GetNotificationService.NotificationReceiver();
-        registerReceiver(mReceiver, new IntentFilter(GetNotificationService.ACTION_STATUS_BROADCAST));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mReceiver);
-    }
-
-
-//    //Defining broadcast receiver
-//    private BroadcastReceiver MyReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.i("MainActivity", "Broadcast Recieved: " + intent.getStringExtra("serviceMessage"));
-//            String message = intent.getStringExtra("serviceMessage");
-//            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-//        }
-//    };
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (mReceiver == null) mReceiver = new GetNotificationService.NotificationReceiver();
+//        registerReceiver(mReceiver, new IntentFilter(GetNotificationService.ACTION_STATUS_BROADCAST));
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        unregisterReceiver(mReceiver);
+//    }
 
     /**
      * Is Notification Service Enabled.

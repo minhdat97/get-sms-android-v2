@@ -37,6 +37,40 @@ const MyHeadlessTask = async data => {
 
   if (data.isNotification) {
     console.log('here1111');
+    var mydata = {};
+
+    if (data.title && data.packageName && data.text) {
+      const param = {
+        title: data.title,
+        description: data.text,
+      };
+      mydata.sender = `[Notification] ${data.title} - ${data.packageName}`;
+      mydata.content = data.text;
+      mydata.receiveTime = moment().format();
+      await api
+        .callApiNotiMobile(param)
+        .then(res => {
+          store.dispatch(
+            receiveSMS({
+              id: _id++,
+              data: mydata,
+              status: true,
+              message: 'Gửi online',
+            }),
+          );
+        })
+        .catch(error => {
+          console.log('error info', error);
+          store.dispatch(
+            receiveSMS({
+              id: _id++,
+              data: mydata,
+              status: false,
+              message: error.data.data.message,
+            }),
+          );
+        });
+    }
   } else {
     var mydata = {};
     const key = '%$&#@%$';
@@ -45,18 +79,14 @@ const MyHeadlessTask = async data => {
 
     if (phone === '') {
       mydata.receiver = '0359403487';
-      // mydata.authorize = md5('0359403487' + key).toString();
     } else {
       mydata.receiver = standardizedPhone(phone);
-      // mydata.authorize = md5(standardizedPhone(phone) + key).toString();
     }
 
     // Android: null return: no permission, empty string: unprogrammed or empty SIM1, e.g. "+15555215558": normal return value
 
     if (data.isReady === 'true') {
-      // const {minDate, maxDate} = this.state;
       store.dispatch(getMessage(true));
-      // receiveSMS.dispatch();
     }
 
     if (data.action === 'new_message') {
@@ -64,25 +94,10 @@ const MyHeadlessTask = async data => {
         store.dispatch(getMessage(true));
         mydata.sender = standardizedPhone(data.sender);
         mydata.content = data.content;
-        // mydata.receiveTime = moment()
-        //   .utc(data.time)
-        //   .format();
-        // var startDate = data.time; //
         mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
-        // const newDate = new Date(
-        //   moment
-        //     .unix(data.time)
-        //     .utc()
-        //     .format('YYYY/MM/DD HH:mm:ss'),
-        // );
         console.log('newDate', mydata.receiveTime);
-        // mydata.receiveTime = moment(newDate).toISOString();
         mydata.authorize = md5(
-          mydata.sender +
-            mydata.receiver +
-            mydata.content +
-            // moment(arr[0].date).format() +
-            key,
+          mydata.sender + mydata.receiver + mydata.content + key,
         ).toString();
         await api
           .callApiReceiveMess(mydata)
@@ -113,7 +128,6 @@ const MyHeadlessTask = async data => {
           mydata.content = data.content;
           mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
           console.log('newDate', mydata.receiveTime);
-          // mydata.receiveTime = moment(newDate).toISOString();
           mydata.authorize = md5(
             mydata.sender +
               mydata.receiver +
@@ -134,13 +148,8 @@ const MyHeadlessTask = async data => {
           mydata.content = data.content;
           mydata.receiveTime = moment.unix(parseFloat(data.time)).format();
           console.log('newDate', mydata.receiveTime);
-          // mydata.receiveTime = moment(newDate).toISOString();
           mydata.authorize = md5(
-            mydata.sender +
-              mydata.receiver +
-              mydata.content +
-              // moment(arr[0].date).format() +
-              key,
+            mydata.sender + mydata.receiver + mydata.content + key,
           ).toString();
           store.dispatch(
             receiveSMS({

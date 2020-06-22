@@ -105,16 +105,9 @@ var timer = new Timer(async function() {
 
   if (phone === '') {
     myphone.phone = '0359403487';
-    // mydata.receiver = '0359403487';
-    // mydata.authorize = sha256('0359403487' + key).toString();
-    // myphone.authorize = sha256('0359403487' + key).toString();
     myphone.authorize = sha256('0359403487' + key).toString();
   } else {
-    // mydata.receiver = standardizedPhone(phone);
-    // mydata.receiver = '0903456728';
-    // mydata.authorize = sha256('0903456728' + key).toString();
     myphone.phone = standardizedPhone(phone);
-    // myphone.authorize = sha256(phoneNumber + key).toString();
     myphone.authorize = sha256(standardizedPhone(phone) + key).toString();
   }
 
@@ -151,6 +144,7 @@ class App extends Component {
 
     AppState.addEventListener('change', this._handleAppStateChange);
     this._recoverData();
+    this._recoverGetMessage();
   }
 
   componentWillUnmount() {
@@ -160,6 +154,7 @@ class App extends Component {
   _handleAppStateChange = nextAppState => {
     if (nextAppState === 'background' || nextAppState === 'inactive') {
       this._storeData(this.props.receiveSMS);
+      this._storeGetMessage(this.props.getMessage);
     }
   };
 
@@ -173,9 +168,28 @@ class App extends Component {
     }
   };
 
+  _recoverGetMessage = async () => {
+    try {
+      await AsyncStorage.getItem('getMessage').then(value =>
+        this.setState({getMessage: JSON.parse(value)}),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   _storeData = async data => {
     try {
       await AsyncStorage.setItem('data', JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  _storeGetMessage = async data => {
+    try {
+      console.log('data _storeGetMessage', data);
+      await AsyncStorage.setItem('getMessage', JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
