@@ -226,12 +226,14 @@ class App extends Component {
         </View>
         <View style={styles.view}>
           <TouchableOpacity
+            disabled={getMessage.data}
             style={styles.button}
             // onPress={() => GetMessage.startService()}
             onPress={this.handleStartService}>
             <Text style={styles.instructions}>{message}</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            disabled={!getMessage.data}
             style={styles.button}
             // onPress={() => GetMessage.stopService()}
             onPress={this.handleStopService}>
