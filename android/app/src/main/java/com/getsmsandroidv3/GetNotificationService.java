@@ -1,5 +1,6 @@
 package com.getsmsandroidv3;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -72,6 +73,7 @@ public class GetNotificationService extends NotificationListenerService {
     }
 
     static class NotificationReceiver extends BroadcastReceiver {
+        @SuppressLint("LongLogTag")
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(ACTION_STATUS_BROADCAST)) {

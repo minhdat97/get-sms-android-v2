@@ -52,18 +52,6 @@ public class MainActivity extends ReactActivity {
 //        HeadlessJsTaskService.acquireWakeLockNow(context);
     }
 
-    //        @Override
-//    protected void onStart() {
-//        super.onStart();
-//        // register broadcast receiver for the intent MyTaskStatus
-//        LocalBroadcastManager.getInstance(this).registerReceiver(MyReceiver, new IntentFilter(GetNotificationService.ACTION_STATUS_BROADCAST));
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(MyReceiver);
-//    }
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
